@@ -18,22 +18,28 @@ import {
   Home,
   Building2,
   Send,
+  Hammer,
+  Recycle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { content } from "@/data/content";
+import { content, servicesCatalog, type ServiceKey, type DomainKey } from "@/data/content";
 import { toast } from "@/hooks/use-toast";
 
 // ============================================
-// Schéma de validation Zod
+// Schéma Zod
 // ============================================
 const formSchema = z.object({
-  serviceType: z.enum(["plomberie", "depannage", "chauffage_install", "chauffage_entretien"], {
+  serviceType: z.enum(["installation", "depannage", "entretien"], {
     errorMap: () => ({ message: "Choisissez un type d'intervention" }),
   }),
+  domain: z.enum(["plomberie", "chauffage"], {
+    errorMap: () => ({ message: "Choisissez un domaine" }),
+  }),
+  prestation: z.string().trim().min(2, "Sélectionnez une prestation"),
   urgency: z.enum(["urgent", "semaine", "flexible"]),
   propertyType: z.enum(["maison", "appartement", "local_pro"]),
   name: z.string().trim().min(2, "Nom trop court").max(80, "Nom trop long"),
@@ -44,42 +50,55 @@ const formSchema = z.object({
     .max(20, "Téléphone invalide")
     .regex(/^[\d\s+().-]+$/, "Format de téléphone invalide"),
   email: z.string().trim().email("Email invalide").max(150).optional().or(z.literal("")),
+  postalCode: z
+    .string()
+    .trim()
+    .regex(/^\d{5}$/, "Code postal à 5 chiffres")
+    .optional()
+    .or(z.literal("")),
   message: z.string().trim().max(800, "Message trop long").optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
 // ============================================
-// Options pour les étapes 1 et 2
+// Options
 // ============================================
-const serviceOptions = [
-  { value: "plomberie", label: "Plomberie générale", desc: "Installation, sanitaires, canalisations", icon: Droplets, color: "serviceBlue" as const },
-  { value: "depannage", label: "Dépannage urgent", desc: "Fuite, débouchage, panne immédiate", icon: AlertTriangle, color: "serviceRose" as const },
-  { value: "chauffage_install", label: "Chauffage — Installation", desc: "Chaudière, pompe à chaleur, radiateurs", icon: Flame, color: "serviceOrange" as const },
-  { value: "chauffage_entretien", label: "Chauffage — Entretien", desc: "Maintenance annuelle, réparation chaudière", icon: Wrench, color: "serviceEmerald" as const },
+const serviceOptions: { value: ServiceKey; label: string; desc: string; icon: typeof Hammer }[] = [
+  { value: "installation", label: "Installation & Rénovation", desc: "Pose neuve, remplacement, rénovation complète", icon: Hammer },
+  { value: "depannage", label: "Dépannage", desc: "Fuite, panne, urgence 7j/7 24h/24", icon: AlertTriangle },
+  { value: "entretien", label: "Entretien", desc: "Maintenance, contrat annuel, mise aux normes", icon: Recycle },
+];
+
+const domainOptions: { value: DomainKey; label: string; icon: typeof Droplets }[] = [
+  { value: "plomberie", label: "Plomberie", icon: Droplets },
+  { value: "chauffage", label: "Chauffage", icon: Flame },
 ];
 
 const urgencyOptions = [
-  { value: "urgent", label: "Urgent (< 24h)", desc: "Intervention prioritaire", icon: AlertTriangle },
-  { value: "semaine", label: "Cette semaine", desc: "Sous 3 à 5 jours", icon: Calendar },
-  { value: "flexible", label: "Flexible", desc: "Devis & planification", icon: CheckCircle2 },
+  { value: "urgent" as const, label: "Urgent (< 24h)", icon: AlertTriangle },
+  { value: "semaine" as const, label: "Cette semaine", icon: Calendar },
+  { value: "flexible" as const, label: "Flexible", icon: CheckCircle2 },
 ];
 
 const propertyOptions = [
-  { value: "maison", label: "Maison", icon: Home },
-  { value: "appartement", label: "Appartement", icon: Building2 },
-  { value: "local_pro", label: "Local pro", icon: Building2 },
+  { value: "maison" as const, label: "Maison", icon: Home },
+  { value: "appartement" as const, label: "Appartement", icon: Building2 },
+  { value: "local_pro" as const, label: "Local pro", icon: Building2 },
 ];
 
 interface QuoteFunnelFormProps {
-  /** Préselectionne le type de service selon la page */
-  defaultService?: FormData["serviceType"];
+  defaultService?: ServiceKey;
+  defaultDomain?: DomainKey;
   variant?: "overlay" | "section";
 }
 
-const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFormProps) => {
+const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }: QuoteFunnelFormProps) => {
   const [step, setStep] = useState(1);
-  const [data, setData] = useState<Partial<FormData>>({ serviceType: defaultService });
+  const [data, setData] = useState<Partial<FormData>>({
+    serviceType: defaultService,
+    domain: defaultDomain,
+  });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
@@ -87,13 +106,12 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
   const totalSteps = 3;
   const progress = (step / totalSteps) * 100;
 
-  const update = (field: keyof FormData, value: string) => {
+  const update = <K extends keyof FormData>(field: K, value: FormData[K]) => {
     setData((d) => ({ ...d, [field]: value }));
     setErrors((e) => ({ ...e, [field]: undefined }));
   };
 
   const next = () => {
-    // Validation par étape
     if (step === 1) {
       if (!data.serviceType) {
         setErrors({ serviceType: "Choisissez un type d'intervention" });
@@ -105,6 +123,14 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
       }
     }
     if (step === 2) {
+      if (!data.domain) {
+        setErrors({ domain: "Choisissez plomberie ou chauffage" });
+        return;
+      }
+      if (!data.prestation) {
+        setErrors({ prestation: "Précisez la prestation" });
+        return;
+      }
       if (!data.propertyType) {
         setErrors({ propertyType: "Précisez le type de logement" });
         return;
@@ -131,7 +157,6 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
     setSubmitting(true);
     try {
       const endpoint = content.company.formspreeEndpoint;
-      // Si Formspree pas configuré, on simule un succès local
       if (endpoint.includes("REMPLACER_PAR_VOTRE_ID")) {
         await new Promise((r) => setTimeout(r, 800));
       } else {
@@ -140,7 +165,7 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({
             ...result.data,
-            _subject: `Nouveau devis — ${result.data.serviceType} — ${result.data.name}`,
+            _subject: `Devis ${result.data.serviceType} ${result.data.domain} — ${result.data.name}`,
           }),
         });
         if (!res.ok) throw new Error("Échec d'envoi");
@@ -154,8 +179,12 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
     }
   };
 
+  // Liste des prestations dynamique selon service + domaine
+  const prestationList =
+    data.serviceType && data.domain ? servicesCatalog[data.serviceType].domains[data.domain].items : [];
+
   // ============================================
-  // ÉCRAN DE CONFIRMATION
+  // CONFIRMATION
   // ============================================
   if (submitted) {
     return (
@@ -204,7 +233,7 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
 
       <form onSubmit={handleSubmit} className="p-5 sm:p-6">
         <AnimatePresence mode="wait">
-          {/* ============ ÉTAPE 1 ============ */}
+          {/* ============ ÉTAPE 1 : Type d'intervention + délai ============ */}
           {step === 1 && (
             <motion.div
               key="step-1"
@@ -215,10 +244,10 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
               className="space-y-5"
             >
               <div>
-                <h3 className="font-display text-lg font-bold text-foreground mb-1">Quel type d'intervention ?</h3>
-                <p className="text-sm text-muted-foreground">Sélectionnez le service qui correspond à votre besoin.</p>
+                <h3 className="font-display text-lg font-bold text-foreground mb-1">Que souhaitez-vous ?</h3>
+                <p className="text-sm text-muted-foreground">Choisissez votre type d'intervention.</p>
               </div>
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="space-y-2.5">
                 {serviceOptions.map((opt) => {
                   const Icon = opt.icon;
                   const active = data.serviceType === opt.value;
@@ -226,21 +255,26 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
                     <button
                       type="button"
                       key={opt.value}
-                      onClick={() => update("serviceType", opt.value)}
-                      className={`text-left p-3.5 rounded-xl border-2 transition-smooth ${
+                      onClick={() => {
+                        update("serviceType", opt.value);
+                        // reset prestation si on change de service
+                        update("prestation", "" as FormData["prestation"]);
+                      }}
+                      className={`w-full text-left p-3.5 rounded-xl border-2 transition-smooth ${
                         active
                           ? "border-accent bg-accent/5 shadow-sm"
                           : "border-border bg-card hover:border-accent/40"
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent flex-shrink-0`}>
-                          <Icon className="h-4.5 w-4.5" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent flex-shrink-0">
+                          <Icon className="h-5 w-5" />
                         </div>
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                           <div className="font-semibold text-sm text-foreground">{opt.label}</div>
                           <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
                         </div>
+                        {active && <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" />}
                       </div>
                     </button>
                   );
@@ -249,7 +283,7 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
               {errors.serviceType && <p className="text-xs text-destructive">{errors.serviceType}</p>}
 
               <div className="pt-2">
-                <Label className="text-sm font-semibold text-foreground mb-2 block">Quel est le délai souhaité ?</Label>
+                <Label className="text-sm font-semibold text-foreground mb-2 block">Délai souhaité</Label>
                 <div className="grid grid-cols-3 gap-2">
                   {urgencyOptions.map((opt) => {
                     const Icon = opt.icon;
@@ -274,7 +308,7 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
             </motion.div>
           )}
 
-          {/* ============ ÉTAPE 2 ============ */}
+          {/* ============ ÉTAPE 2 : Domaine + prestation + logement ============ */}
           {step === 2 && (
             <motion.div
               key="step-2"
@@ -285,9 +319,58 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
               className="space-y-5"
             >
               <div>
-                <h3 className="font-display text-lg font-bold text-foreground mb-1">Précisez votre situation</h3>
-                <p className="text-sm text-muted-foreground">Pour vous proposer la meilleure solution.</p>
+                <h3 className="font-display text-lg font-bold text-foreground mb-1">Plomberie ou chauffage ?</h3>
+                <p className="text-sm text-muted-foreground">Précisez votre besoin.</p>
               </div>
+
+              <div>
+                <Label className="text-sm font-semibold text-foreground mb-2 block">Domaine</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {domainOptions.map((opt) => {
+                    const Icon = opt.icon;
+                    const active = data.domain === opt.value;
+                    return (
+                      <button
+                        type="button"
+                        key={opt.value}
+                        onClick={() => {
+                          update("domain", opt.value);
+                          update("prestation", "" as FormData["prestation"]);
+                        }}
+                        className={`flex items-center gap-2.5 p-3.5 rounded-lg border-2 transition-smooth ${
+                          active ? "border-accent bg-accent/5" : "border-border bg-card hover:border-accent/40"
+                        }`}
+                      >
+                        <Icon className={`h-5 w-5 ${active ? "text-accent" : "text-muted-foreground"}`} />
+                        <span className="text-sm font-semibold text-foreground">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {errors.domain && <p className="text-xs text-destructive mt-1">{errors.domain}</p>}
+              </div>
+
+              {data.serviceType && data.domain && (
+                <div>
+                  <Label htmlFor="prestation" className="text-sm font-semibold text-foreground mb-2 block">
+                    Prestation
+                  </Label>
+                  <select
+                    id="prestation"
+                    value={data.prestation || ""}
+                    onChange={(e) => update("prestation", e.target.value)}
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  >
+                    <option value="">— Sélectionner —</option>
+                    {prestationList.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.prestation && <p className="text-xs text-destructive mt-1">{errors.prestation}</p>}
+                </div>
+              )}
 
               <div>
                 <Label className="text-sm font-semibold text-foreground mb-2 block">Type de logement</Label>
@@ -300,12 +383,12 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
                         type="button"
                         key={opt.value}
                         onClick={() => update("propertyType", opt.value)}
-                        className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-smooth ${
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-smooth ${
                           active ? "border-accent bg-accent/5" : "border-border bg-card hover:border-accent/40"
                         }`}
                       >
-                        <Icon className={`h-5 w-5 ${active ? "text-accent" : "text-muted-foreground"}`} />
-                        <span className="text-sm font-semibold text-foreground">{opt.label}</span>
+                        <Icon className={`h-4 w-4 ${active ? "text-accent" : "text-muted-foreground"}`} />
+                        <span className="text-xs font-semibold text-foreground">{opt.label}</span>
                       </button>
                     );
                   })}
@@ -315,23 +398,22 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
 
               <div>
                 <Label htmlFor="message" className="text-sm font-semibold text-foreground mb-2 block">
-                  Décrivez brièvement votre besoin (optionnel)
+                  Précisez votre besoin (optionnel)
                 </Label>
                 <Textarea
                   id="message"
-                  placeholder="Ex : ma chaudière fait du bruit depuis 3 jours, plus d'eau chaude…"
+                  placeholder="Ex : chaudière Saunier Duval qui s'arrête, code F28…"
                   value={data.message || ""}
                   onChange={(e) => update("message", e.target.value)}
                   maxLength={800}
-                  rows={4}
+                  rows={3}
                   className="resize-none"
                 />
-                <p className="text-xs text-muted-foreground mt-1 text-right">{(data.message || "").length}/800</p>
               </div>
             </motion.div>
           )}
 
-          {/* ============ ÉTAPE 3 ============ */}
+          {/* ============ ÉTAPE 3 : Coordonnées ============ */}
           {step === 3 && (
             <motion.div
               key="step-3"
@@ -360,19 +442,34 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
                 {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
               </div>
 
-              <div>
-                <Label htmlFor="phone" className="text-sm font-semibold text-foreground mb-1.5 flex items-center gap-1.5">
-                  <Phone className="h-3.5 w-3.5 text-accent" /> Téléphone *
-                </Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="06 12 34 56 78"
-                  value={data.phone || ""}
-                  onChange={(e) => update("phone", e.target.value)}
-                  maxLength={20}
-                />
-                {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="phone" className="text-sm font-semibold text-foreground mb-1.5 flex items-center gap-1.5">
+                    <Phone className="h-3.5 w-3.5 text-accent" /> Téléphone *
+                  </Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="06 12 34 56 78"
+                    value={data.phone || ""}
+                    onChange={(e) => update("phone", e.target.value)}
+                    maxLength={20}
+                  />
+                  {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
+                </div>
+                <div>
+                  <Label htmlFor="postalCode" className="text-sm font-semibold text-foreground mb-1.5">
+                    Code postal
+                  </Label>
+                  <Input
+                    id="postalCode"
+                    placeholder="75001"
+                    value={data.postalCode || ""}
+                    onChange={(e) => update("postalCode", e.target.value)}
+                    maxLength={5}
+                  />
+                  {errors.postalCode && <p className="text-xs text-destructive mt-1">{errors.postalCode}</p>}
+                </div>
               </div>
 
               <div>
@@ -392,7 +489,7 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
 
               <p className="text-xs text-muted-foreground leading-relaxed pt-1">
                 <MessageSquare className="inline h-3 w-3 mr-1" />
-                Vos données ne sont utilisées que pour vous recontacter (RGPD).
+                Vos données ne servent qu'à vous recontacter (RGPD).
               </p>
             </motion.div>
           )}
@@ -418,7 +515,7 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
                 </>
               ) : (
                 <>
-                  Envoyer ma demande <Send className="h-4 w-4" />
+                  Recevoir mon devis <Send className="h-4 w-4" />
                 </>
               )}
             </Button>
@@ -431,7 +528,7 @@ const QuoteFunnelForm = ({ defaultService, variant = "section" }: QuoteFunnelFor
 
 const containerCls = (variant: "overlay" | "section") =>
   variant === "overlay"
-    ? "bg-card rounded-2xl shadow-floating border border-border w-full max-w-md mx-auto"
-    : "bg-card rounded-2xl shadow-elegant border border-border w-full max-w-md mx-auto";
+    ? "bg-card border border-border rounded-2xl shadow-glow-soft overflow-hidden"
+    : "bg-card border border-border rounded-2xl shadow-md overflow-hidden max-w-xl mx-auto";
 
 export default QuoteFunnelForm;
