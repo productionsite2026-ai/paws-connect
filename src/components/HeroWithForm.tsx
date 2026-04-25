@@ -5,7 +5,7 @@ import { ChevronRight, Phone, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import QuoteFunnelForm from "@/components/QuoteFunnelForm";
-import { content } from "@/data/content";
+import { content, type ServiceKey, type DomainKey } from "@/data/content";
 import { heroEntry } from "@/lib/animations";
 
 interface HeroProps {
@@ -14,14 +14,15 @@ interface HeroProps {
   hook: string;
   trustBadges?: { label: string; variant: "serviceBlue" | "serviceOrange" | "serviceEmerald" | "serviceRose" | "serviceCyan" | "serviceViolet" | "serviceAmber"; icon?: ReactNode }[];
   breadcrumb?: { label: string; href?: string }[];
-  defaultService?: "plomberie" | "depannage" | "chauffage_install" | "chauffage_entretien";
+  defaultService?: ServiceKey;
+  defaultDomain?: DomainKey;
 }
 
 /**
  * Hero standardisé avec formulaire chevauchant la 1ère section.
  * Le formulaire est en colonne droite sur desktop, et chevauche le hero sur mobile.
  */
-const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultService }: HeroProps) => {
+const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultService, defaultDomain }: HeroProps) => {
   return (
     <section className="relative pt-24 pb-12 md:pb-32 bg-water-pattern overflow-hidden">
       {/* Background decorative */}
@@ -92,7 +93,7 @@ const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultSe
             transition={{ duration: 0.7, delay: 0.2 }}
             className="lg:sticky lg:top-24 w-full"
           >
-            <QuoteFunnelForm variant="overlay" defaultService={defaultService} />
+            <QuoteFunnelForm variant="overlay" defaultService={defaultService} defaultDomain={defaultDomain} />
           </motion.div>
         </div>
       </div>

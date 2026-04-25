@@ -63,7 +63,7 @@ const Footer = () => {
           <div>
             <h3 className="font-display font-bold text-sm uppercase tracking-wide mb-4 text-accent">Zone d'intervention</h3>
             <p className="text-sm text-primary-foreground/75 mb-3">
-              Saint-Louis et le Sud-Alsace.
+              Paris centre et toute l'Île-de-France (banlieue comprise).
             </p>
             <div className="flex flex-wrap gap-1.5">
               {content.company.contact.areaServed.map((c) => (
@@ -77,7 +77,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/15 mt-10 pt-6 flex flex-col md:flex-row gap-3 justify-between items-center text-xs text-primary-foreground/60">
           <p>© {new Date().getFullYear()} {content.company.name} — SIRET {content.company.legal.siret} — {content.company.legal.assurance}</p>
-          <p>Plombier · Chauffagiste · Dépannage 7j/7 — {content.company.contact.city}</p>
+          <p>Plombier · Chauffagiste · Dépannage 7j/7 — Paris & Île-de-France</p>
         </div>
       </div>
     </footer>
