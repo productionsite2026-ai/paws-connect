@@ -4,7 +4,7 @@ const ORIGIN = typeof window !== "undefined" ? window.location.origin : "https:/
 
 export const localBusinessSchema = {
   "@context": "https://schema.org",
-  "@type": "Plumber",
+  "@type": ["Plumber", "HVACBusiness"],
   "@id": `${ORIGIN}/#organization`,
   name: content.company.name,
   description: content.company.description,
@@ -20,7 +20,11 @@ export const localBusinessSchema = {
     addressRegion: content.company.contact.region,
     addressCountry: content.company.contact.country,
   },
-  areaServed: content.company.contact.areaServed.map((c) => ({ "@type": "City", name: c })),
+  areaServed: [
+    { "@type": "City", name: "Paris" },
+    { "@type": "AdministrativeArea", name: "Île-de-France" },
+    ...content.company.contact.areaServed.map((c) => ({ "@type": "AdministrativeArea", name: c })),
+  ],
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
@@ -50,7 +54,10 @@ export const serviceSchema = (name: string, description: string, serviceType: st
   description,
   serviceType,
   provider: { "@id": `${ORIGIN}/#organization` },
-  areaServed: content.company.contact.areaServed.map((c) => ({ "@type": "City", name: c })),
+  areaServed: [
+    { "@type": "City", name: "Paris" },
+    { "@type": "AdministrativeArea", name: "Île-de-France" },
+  ],
   offers: { "@type": "Offer", description: "Devis gratuit et personnalisé" },
 });
 

@@ -40,7 +40,7 @@ const Navbar = () => {
             <Droplets className="h-5 w-5 text-primary-foreground" />
           </span>
           <span className="leading-tight">
-            Artisant <span className="text-accent">Saint Louis</span>
+            Artisan <span className="text-accent">Saint Louis</span>
           </span>
         </Link>
 
