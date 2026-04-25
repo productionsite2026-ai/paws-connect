@@ -38,6 +38,24 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          soft: "hsl(var(--accent-soft))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        service: {
+          blue: "hsl(var(--service-blue))",
+          cyan: "hsl(var(--service-cyan))",
+          orange: "hsl(var(--service-orange))",
+          emerald: "hsl(var(--service-emerald))",
+          rose: "hsl(var(--service-rose))",
+          violet: "hsl(var(--service-violet))",
+          amber: "hsl(var(--service-amber))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -80,6 +98,10 @@ export default {
             height: "0",
           },
         },
+      },
+      fontFamily: {
+        display: ["Manrope", "system-ui", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
