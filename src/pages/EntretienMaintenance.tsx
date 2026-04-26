@@ -141,6 +141,11 @@ const EntretienMaintenance = () => {
         ]}
       />
 
+      <QuickAnswer
+        question="L'entretien annuel d'une chaudière est-il obligatoire à Paris ?"
+        answer="Oui, l'entretien annuel d'une chaudière fonctionnant au gaz, au fioul, au bois ou à charbon (puissance entre 4 et 400 kW) est obligatoire en France depuis le décret n°2009-649. À Paris et en Île-de-France, cette visite est à la charge de l'occupant (locataire ou propriétaire). Elle doit être réalisée par un professionnel qualifié qui remet une attestation officielle dans les 15 jours. Artisan Saint Louis assure cet entretien avec ou sans contrat de maintenance, sur toutes marques."
+      />
+
       <UseCasesSection
         title="Quand faire appel à nous pour l'entretien ?"
         cases={[
