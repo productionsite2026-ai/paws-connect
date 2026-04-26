@@ -29,8 +29,8 @@ interface HeroProps {
 const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultService, defaultDomain, backgroundImage, backgroundImageAlt }: HeroProps) => {
   return (
     <>
-      <section className="relative pt-24 pb-32 md:pb-40 bg-water-pattern overflow-hidden">
-        {/* Background image SEO + contexte visuel */}
+      <section className="relative pt-24 pb-32 md:pb-40 overflow-hidden">
+        {/* Image de fond visible (SEO + contexte visuel) */}
         {backgroundImage && (
           <>
             <img
@@ -38,14 +38,16 @@ const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultSe
               alt={backgroundImageAlt || ""}
               width={1920}
               height={1080}
-              className="absolute inset-0 w-full h-full object-cover -z-20 opacity-[0.22]"
+              className="absolute inset-0 w-full h-full object-cover -z-20"
               fetchPriority="high"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/60 to-background -z-10" />
+            {/* Overlay sombre pour lisibilité du texte (clair sur fond sombre) */}
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/70 to-background/95 -z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/60 via-transparent to-primary/30 -z-10" />
           </>
         )}
-        {/* Background decoratif */}
-        <div className="absolute inset-0 bg-water-gradient -z-10" />
+        {/* Background décoratif (utilisé uniquement si pas d'image) */}
+        {!backgroundImage && <div className="absolute inset-0 bg-water-gradient -z-10" />}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl -z-10 -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl -z-10 translate-y-1/2 -translate-x-1/3" />
 
