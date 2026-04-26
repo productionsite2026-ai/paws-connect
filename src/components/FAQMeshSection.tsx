@@ -38,8 +38,13 @@ const FAQMeshSection = ({ links, embedded = false }: FAQMeshSectionProps) => {
           </p>
         </motion.div>
 
-        {/* Layout horizontal : 1 col mobile, 3 col desktop pour aligner sur une ligne */}
-        <div className={`grid gap-3 sm:grid-cols-2 lg:grid-cols-${Math.min(links.length, 4)}`}>
+        {/* Layout horizontal : 1 col mobile, 2 tablette, n colonnes desktop pour alignement sur une ligne */}
+        {(() => {
+          const cols = Math.min(links.length, 4);
+          const colsClass =
+            cols === 4 ? "lg:grid-cols-4" : cols === 3 ? "lg:grid-cols-3" : cols === 2 ? "lg:grid-cols-2" : "lg:grid-cols-1";
+          return (
+            <div className={`grid gap-3 sm:grid-cols-2 ${colsClass}`}>
           {links.map((l, i) => (
             <motion.div key={l.href + l.question} {...staggerItem(i)}>
               <Link
