@@ -68,10 +68,7 @@ const DepannageUrgent = () => {
         ]}
       />
 
-      <QuickAnswer
-        question="Qui appeler en urgence pour une fuite ou une chaudière en panne à Paris ?"
-        answer="En cas de fuite d'eau ou de panne de chaudière à Paris ou en Île-de-France, fermez d'abord le robinet général d'arrivée d'eau (ou la vanne gaz si nécessaire), puis appelez Artisan Saint Louis au 06 12 34 56 78. Notre plombier-chauffagiste urgentiste intervient rapidement, 7 jours sur 7, 24 heures sur 24, dans Paris intra-muros et toute la banlieue. Diagnostic immédiat, devis annoncé avant toute réparation, même la nuit ou le dimanche."
-      />
+      {/* QuickAnswer déplacé après ServicesGrid */}
 
       {/* Bandeau urgence */}
       <section className="py-8 bg-service-rose/10 border-y border-service-rose/20">
