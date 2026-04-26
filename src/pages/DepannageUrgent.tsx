@@ -12,7 +12,7 @@ import QuickAnswer from "@/components/QuickAnswer";
 import ServicesGrid from "@/components/ServicesGrid";
 import UseCasesSection from "@/components/UseCasesSection";
 import FAQSection from "@/components/FAQSection";
-import FAQMeshSection from "@/components/FAQMeshSection";
+
 import FinalCTA from "@/components/FinalCTA";
 import { useSEO, useJsonLd } from "@/hooks/useSEO";
 import { content } from "@/data/content";
@@ -190,10 +190,7 @@ const DepannageUrgent = () => {
           { q: "Intervenez-vous la nuit, dimanche et jours fériés ?", a: "Oui, notre service d'urgence est disponible 24h/24, 7j/7, y compris dimanches et jours fériés. Nous annonçons toujours nos conditions d'intervention à l'avance, sans surprise." },
           { q: "Travaillez-vous avec toutes les marques de chaudière ?", a: "Oui : Saunier Duval, Viessmann, Bosch, De Dietrich, Atlantic, Frisquet, Vaillant, Chappée, Geminox, ELM Leblanc et plus encore. Nos camions transportent en permanence les pièces les plus courantes." },
         ]}
-      />
-
-      <FAQMeshSection
-        links={[
+        meshLinks={[
           { question: "Quel équipement installer en remplacement urgent ?", href: content.routes.installation, pageLabel: "Installation & Rénovation" },
           { question: "Comment éviter les pannes via un contrat d'entretien ?", href: content.routes.entretien, pageLabel: "Entretien" },
           { question: "Voir l'ensemble de nos services", href: "/", pageLabel: "Accueil" },

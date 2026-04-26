@@ -8,10 +8,17 @@ import {
 import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { fadeUp } from "@/lib/animations";
+import FAQMeshSection from "@/components/FAQMeshSection";
 
 export interface FAQItem {
   q: string;
   a: string;
+}
+
+export interface FAQMeshLink {
+  question: string;
+  href: string;
+  pageLabel: string;
 }
 
 interface FAQSectionProps {
@@ -19,9 +26,11 @@ interface FAQSectionProps {
   subtitle?: string;
   faqs: FAQItem[];
   injectSchema?: boolean;
+  /** Liens de maillage interne intégrés en fin de FAQ (alignés horizontalement) */
+  meshLinks?: FAQMeshLink[];
 }
 
-const FAQSection = ({ title = "Questions fréquentes", subtitle, faqs, injectSchema = true }: FAQSectionProps) => {
+const FAQSection = ({ title = "Questions fréquentes", subtitle, faqs, injectSchema = true, meshLinks }: FAQSectionProps) => {
   // Inject FAQPage JSON-LD schema for SEO + IA
   useEffect(() => {
     if (!injectSchema) return;
@@ -53,7 +62,7 @@ const FAQSection = ({ title = "Questions fréquentes", subtitle, faqs, injectSch
           {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
         </motion.div>
 
-        <motion.div {...fadeUp} className="max-w-3xl mx-auto">
+        <motion.div {...fadeUp} className="max-w-4xl mx-auto">
           <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((f, i) => (
               <AccordionItem
@@ -70,6 +79,11 @@ const FAQSection = ({ title = "Questions fréquentes", subtitle, faqs, injectSch
               </AccordionItem>
             ))}
           </Accordion>
+
+          {/* Maillage interne aligné en fin de FAQ */}
+          {meshLinks && meshLinks.length > 0 && (
+            <FAQMeshSection links={meshLinks} embedded />
+          )}
         </motion.div>
       </div>
     </section>

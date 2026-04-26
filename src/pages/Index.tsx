@@ -14,7 +14,7 @@ import QuickAnswer from "@/components/QuickAnswer";
 import ServicesGrid from "@/components/ServicesGrid";
 import UseCasesSection from "@/components/UseCasesSection";
 import FAQSection from "@/components/FAQSection";
-import FAQMeshSection from "@/components/FAQMeshSection";
+
 import FinalCTA from "@/components/FinalCTA";
 import { Badge } from "@/components/ui/badge";
 import { useSEO, useJsonLd } from "@/hooks/useSEO";
@@ -248,10 +248,7 @@ const Index = () => {
           { q: "Êtes-vous certifié et assuré ?", a: "Oui, Artisan Saint Louis dispose de la certification professionnelle, de l'assurance responsabilité civile et de la garantie décennale pour tous nos travaux. Nos devis incluent systématiquement ces mentions légales." },
           { q: "Comment se déroule un devis ?", a: "Le devis est gratuit et sans engagement. Nous évaluons votre besoin par téléphone ou via notre formulaire en ligne, puis nous nous déplaçons si nécessaire pour un état des lieux. Le devis détaillé vous est remis sous 48 h." },
         ]}
-      />
-
-      <FAQMeshSection
-        links={[
+        meshLinks={[
           { question: "Comment se passe une installation ou rénovation complète ?", href: content.routes.installation, pageLabel: "Installation & Rénovation" },
           { question: "Comment réagir face à une fuite ou une chaudière en panne ?", href: content.routes.depannage, pageLabel: "Dépannage urgent" },
           { question: "Quand faire l'entretien annuel obligatoire ?", href: content.routes.entretien, pageLabel: "Entretien" },

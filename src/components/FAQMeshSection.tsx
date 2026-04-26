@@ -13,13 +13,70 @@ interface FAQLink {
 interface FAQMeshSectionProps {
   /** Liens vers les FAQ des autres pages — maillage interne fort */
   links: FAQLink[];
+  /** Mode "embedded" : intégré en fin de FAQ (sans section autonome, layout horizontal compact) */
+  embedded?: boolean;
 }
 
 /**
  * FAQ Maillée — chaque page renvoie vers les FAQ des autres pages.
  * Levier SEO majeur (autorité globale) + IA (parcours sémantique).
+ *
+ * `embedded` : layout horizontal sans wrapper section, à utiliser en fin de FAQSection
+ * pour créer un maillage continu entre les questions et les autres pages.
  */
-const FAQMeshSection = ({ links }: FAQMeshSectionProps) => {
+const FAQMeshSection = ({ links, embedded = false }: FAQMeshSectionProps) => {
+  if (embedded) {
+    return (
+      <div className="mt-10 pt-8 border-t border-border/60">
+        <motion.div {...fadeUp} className="text-center mb-6">
+          <Badge variant="serviceViolet" className="mb-3">🔗 Allez plus loin</Badge>
+          <h3 className="font-display text-xl md:text-2xl font-bold text-foreground mb-1">
+            Questions liées sur nos autres expertises
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            Explorez les réponses détaillées sur nos autres pages.
+          </p>
+        </motion.div>
+
+        {/* Layout horizontal : 1 col mobile, 2 tablette, n colonnes desktop pour alignement sur une ligne */}
+        {(() => {
+          const cols = Math.min(links.length, 4);
+          const colsClass =
+            cols === 4 ? "lg:grid-cols-4" : cols === 3 ? "lg:grid-cols-3" : cols === 2 ? "lg:grid-cols-2" : "lg:grid-cols-1";
+          return (
+            <div className={`grid gap-3 sm:grid-cols-2 ${colsClass}`}>
+          {links.map((l, i) => (
+            <motion.div key={l.href + l.question} {...staggerItem(i)}>
+              <Link
+                to={l.href}
+                className="group flex h-full flex-col gap-2 p-4 rounded-xl border border-border bg-card hover:border-accent/50 hover:shadow-md hover:-translate-y-0.5 transition-smooth"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent flex-shrink-0">
+                    <HelpCircle className="h-4 w-4" />
+                  </div>
+                  <p className="text-[10px] font-semibold text-accent uppercase tracking-wide truncate">
+                    {l.pageLabel}
+                  </p>
+                </div>
+                <p className="text-sm font-medium text-foreground group-hover:text-accent transition-smooth leading-snug flex-1">
+                  {l.question}
+                </p>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-accent transition-smooth">
+                  <span>Voir la réponse</span>
+                  <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+            </div>
+          );
+        })()}
+      </div>
+    );
+  }
+
+  // Mode standalone (legacy / fallback)
   return (
     <section className="py-14 bg-card border-t border-border">
       <div className="container mx-auto px-4">
@@ -33,12 +90,12 @@ const FAQMeshSection = ({ links }: FAQMeshSectionProps) => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-3 max-w-4xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-6xl mx-auto">
           {links.map((l, i) => (
             <motion.div key={l.href + l.question} {...staggerItem(i)}>
               <Link
                 to={l.href}
-                className="group flex items-start gap-3 p-4 rounded-xl border border-border bg-section-gradient hover:border-accent/40 hover:shadow-md transition-smooth"
+                className="group flex items-start gap-3 p-4 rounded-xl border border-border bg-section-gradient hover:border-accent/40 hover:shadow-md transition-smooth h-full"
               >
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent flex-shrink-0">
                   <HelpCircle className="h-4 w-4" />
