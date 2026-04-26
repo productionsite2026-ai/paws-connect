@@ -313,7 +313,7 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                 <h3 className="font-display text-lg font-bold text-foreground mb-1">Que souhaitez-vous ?</h3>
                 <p className="text-sm text-muted-foreground">Cliquez pour passer à l'étape suivante.</p>
               </div>
-              <div className="space-y-2.5">
+              <div className="grid grid-cols-3 gap-2">
                 {serviceOptions.map((opt) => {
                   const Icon = opt.icon;
                   const active = data.serviceType === opt.value;
@@ -322,24 +322,18 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                       type="button"
                       key={opt.value}
                       onClick={() => pickService(opt.value)}
-                      className={`w-full text-left p-3.5 rounded-xl border-2 transition-smooth ${
+                      className={`relative p-3 rounded-xl border-2 transition-smooth text-center ${
                         active ? `${opt.ring} shadow-sm` : "border-border bg-card hover:border-accent/40"
                       }`}
                     >
-                      <div className="flex items-start gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0 ${opt.color}`}>
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="font-semibold text-sm text-foreground">{opt.label}</div>
-                          <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
-                        </div>
-                        {active ? (
-                          <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" />
-                        ) : (
-                          <ArrowRight className="h-5 w-5 text-muted-foreground/50 flex-shrink-0" />
-                        )}
+                      <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-lg ${opt.color}`}>
+                        <Icon className="h-5 w-5" />
                       </div>
+                      <div className="font-semibold text-xs text-foreground leading-tight">{opt.label}</div>
+                      <div className="text-[10px] text-muted-foreground mt-1 leading-snug line-clamp-2">{opt.desc}</div>
+                      {active && (
+                        <CheckCircle2 className="absolute top-1.5 right-1.5 h-4 w-4 text-accent" />
+                      )}
                     </button>
                   );
                 })}
