@@ -359,45 +359,42 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                 <p className="text-sm text-muted-foreground">Choisissez le domaine puis la prestation.</p>
               </div>
 
-              {/* Domaine — cards colorées */}
-              <div>
-                <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
-                  1. Domaine
-                </Label>
-                <div className="grid grid-cols-2 gap-3">
-                  {domainOptions.map((opt) => {
-                    const Icon = opt.icon;
-                    const active = data.domain === opt.value;
-                    return (
-                      <button
-                        type="button"
-                        key={opt.value}
-                        onClick={() => pickDomain(opt.value)}
-                        className={`relative overflow-hidden flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-smooth ${
-                          active ? `${opt.ring} shadow-sm` : "border-border bg-card hover:border-accent/40"
-                        }`}
-                      >
-                        <div className={`flex h-11 w-11 items-center justify-center rounded-full ${opt.color}`}>
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <span className="text-sm font-bold text-foreground">{opt.label}</span>
-                        {active && (
-                          <CheckCircle2 className="h-4 w-4 text-accent absolute top-2 right-2" />
-                        )}
-                      </button>
-                    );
-                  })}
+              {/* === MOITIÉ HAUTE : Domaine + Prestation === */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Domaine — cards colorées */}
+                <div>
+                  <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
+                    1. Domaine
+                  </Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {domainOptions.map((opt) => {
+                      const Icon = opt.icon;
+                      const active = data.domain === opt.value;
+                      return (
+                        <button
+                          type="button"
+                          key={opt.value}
+                          onClick={() => pickDomain(opt.value)}
+                          className={`relative overflow-hidden flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-smooth ${
+                            active ? `${opt.ring} shadow-sm` : "border-border bg-card hover:border-accent/40"
+                          }`}
+                        >
+                          <div className={`flex h-9 w-9 items-center justify-center rounded-full ${opt.color}`}>
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <span className="text-xs font-bold text-foreground">{opt.label}</span>
+                          {active && (
+                            <CheckCircle2 className="h-3.5 w-3.5 text-accent absolute top-1.5 right-1.5" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {errors.domain && <p className="text-xs text-destructive mt-1">{errors.domain}</p>}
                 </div>
-                {errors.domain && <p className="text-xs text-destructive mt-1">{errors.domain}</p>}
-              </div>
 
-              {/* Prestation — cards (au lieu du select) */}
-              {data.serviceType && data.domain && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
+                {/* Prestation — cards (au lieu du select) */}
+                <div>
                   <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
                     2. Prestation {activeDomain && (
                       <Badge variant={activeDomain.value === "plomberie" ? "serviceCyan" : "serviceOrange"} className="ml-1 text-[10px] py-0">
@@ -405,82 +402,96 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                       </Badge>
                     )}
                   </Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {prestationList.map((p) => {
-                      const Icon = prestationIcon(p);
-                      const active = data.prestation === p;
-                      const colorCls = activeDomain?.value === "plomberie"
-                        ? "border-service-cyan bg-service-cyan/5"
-                        : "border-service-orange bg-service-orange/5";
-                      const iconCls = activeDomain?.value === "plomberie"
-                        ? "bg-service-cyan/15 text-service-cyan"
-                        : "bg-service-orange/15 text-service-orange";
+                  {data.serviceType && data.domain ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="grid grid-cols-1 gap-1.5 max-h-[180px] overflow-y-auto pr-1"
+                    >
+                      {prestationList.map((p) => {
+                        const Icon = prestationIcon(p);
+                        const active = data.prestation === p;
+                        const colorCls = activeDomain?.value === "plomberie"
+                          ? "border-service-cyan bg-service-cyan/5"
+                          : "border-service-orange bg-service-orange/5";
+                        const iconCls = activeDomain?.value === "plomberie"
+                          ? "bg-service-cyan/15 text-service-cyan"
+                          : "bg-service-orange/15 text-service-orange";
+                        return (
+                          <button
+                            type="button"
+                            key={p}
+                            onClick={() => pickPrestation(p)}
+                            className={`text-left p-2 rounded-lg border-2 transition-smooth flex items-center gap-2 ${
+                              active ? `${colorCls} shadow-sm` : "border-border bg-card hover:border-accent/40"
+                            }`}
+                          >
+                            <div className={`flex h-6 w-6 items-center justify-center rounded-md flex-shrink-0 ${iconCls}`}>
+                              <Icon className="h-3 w-3" />
+                            </div>
+                            <span className="text-xs font-semibold text-foreground leading-tight flex-1">
+                              {p}
+                            </span>
+                            {active && (
+                              <CheckCircle2 className="h-3.5 w-3.5 text-accent flex-shrink-0" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </motion.div>
+                  ) : (
+                    <div className="text-xs text-muted-foreground italic p-3 rounded-lg border-2 border-dashed border-border">
+                      Sélectionnez d'abord un domaine
+                    </div>
+                  )}
+                  {errors.prestation && <p className="text-xs text-destructive mt-1">{errors.prestation}</p>}
+                </div>
+              </div>
+
+              {/* === MOITIÉ BASSE : Logement + Précisions === */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Type de logement */}
+                <div>
+                  <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
+                    3. Type de logement
+                  </Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {propertyOptions.map((opt) => {
+                      const Icon = opt.icon;
+                      const active = data.propertyType === opt.value;
                       return (
                         <button
                           type="button"
-                          key={p}
-                          onClick={() => pickPrestation(p)}
-                          className={`text-left p-2.5 rounded-lg border-2 transition-smooth flex items-start gap-2 ${
-                            active ? `${colorCls} shadow-sm` : "border-border bg-card hover:border-accent/40"
+                          key={opt.value}
+                          onClick={() => pickProperty(opt.value)}
+                          className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-smooth ${
+                            active ? "border-accent bg-accent/5 shadow-sm" : "border-border bg-card hover:border-accent/40"
                           }`}
                         >
-                          <div className={`flex h-7 w-7 items-center justify-center rounded-md flex-shrink-0 ${iconCls}`}>
-                            <Icon className="h-3.5 w-3.5" />
-                          </div>
-                          <span className="text-xs font-semibold text-foreground leading-tight pt-0.5">
-                            {p}
-                          </span>
-                          {active && (
-                            <CheckCircle2 className="h-3.5 w-3.5 text-accent flex-shrink-0 ml-auto mt-0.5" />
-                          )}
+                          <Icon className={`h-4 w-4 ${active ? "text-accent" : "text-muted-foreground"}`} />
+                          <span className="text-xs font-semibold text-foreground">{opt.label}</span>
                         </button>
                       );
                     })}
                   </div>
-                  {errors.prestation && <p className="text-xs text-destructive mt-1">{errors.prestation}</p>}
-                </motion.div>
-              )}
-
-              {/* Type de logement */}
-              <div>
-                <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
-                  3. Type de logement
-                </Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {propertyOptions.map((opt) => {
-                    const Icon = opt.icon;
-                    const active = data.propertyType === opt.value;
-                    return (
-                      <button
-                        type="button"
-                        key={opt.value}
-                        onClick={() => pickProperty(opt.value)}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-smooth ${
-                          active ? "border-accent bg-accent/5 shadow-sm" : "border-border bg-card hover:border-accent/40"
-                        }`}
-                      >
-                        <Icon className={`h-4 w-4 ${active ? "text-accent" : "text-muted-foreground"}`} />
-                        <span className="text-xs font-semibold text-foreground">{opt.label}</span>
-                      </button>
-                    );
-                  })}
+                  {errors.propertyType && <p className="text-xs text-destructive mt-1">{errors.propertyType}</p>}
                 </div>
-                {errors.propertyType && <p className="text-xs text-destructive mt-1">{errors.propertyType}</p>}
-              </div>
 
-              <div>
-                <Label htmlFor="message" className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
-                  Précisez votre besoin (optionnel)
-                </Label>
-                <Textarea
-                  id="message"
-                  placeholder="Ex : chaudière Saunier Duval qui s'arrête, code F28…"
-                  value={data.message || ""}
-                  onChange={(e) => update("message", e.target.value)}
-                  maxLength={800}
-                  rows={3}
-                  className="resize-none"
-                />
+                <div>
+                  <Label htmlFor="message" className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
+                    Précisez votre besoin (optionnel)
+                  </Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Ex : chaudière Saunier Duval, code F28…"
+                    value={data.message || ""}
+                    onChange={(e) => update("message", e.target.value)}
+                    maxLength={800}
+                    rows={3}
+                    className="resize-none text-sm"
+                  />
+                </div>
               </div>
             </motion.div>
           )}
