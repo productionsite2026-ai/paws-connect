@@ -1,4 +1,10 @@
 import { Droplets, Award, Clock, Shield, Wrench, Flame, Hammer, Recycle, MapPin, Users, ThumbsUp } from "lucide-react";
+import installationImg from "@/assets/installation-chaudiere-paris.jpg";
+import depannageImg from "@/assets/depannage-urgence-paris.jpg";
+import entretienImg from "@/assets/entretien-chaudiere-annuel.jpg";
+import fuiteImg from "@/assets/fuite-plomberie-paris.jpg";
+import bainImg from "@/assets/renovation-salle-bain.jpg";
+import pacImg from "@/assets/pompe-chaleur-paris.jpg";
 import { motion } from "framer-motion";
 import PageLayout from "@/components/PageLayout";
 import HeroWithForm from "@/components/HeroWithForm";
@@ -138,6 +144,9 @@ const Index = () => {
             title: "Installation & Rénovation",
             description: "Pose neuve, remplacement et rénovation complète : salle de bain, sanitaires, chaudière, pompe à chaleur, radiateurs.",
             features: ["Plomberie sanitaire complète", "Chaudière, PAC, granulés", "Aides MaPrimeRénov' calculées"],
+            image: installationImg,
+            imageAlt: "Installation de chaudière gaz à condensation par un artisan plombier-chauffagiste à Paris",
+            stat: { value: "+1 200", label: "Installations" },
           },
           {
             icon: Wrench,
@@ -146,6 +155,9 @@ const Index = () => {
             title: "Dépannage 7j/7 24h/24",
             description: "Intervention rapide pour fuites, dégâts des eaux, pannes chaudière, débouchage, plus d'eau chaude.",
             features: ["Urgence < 2h", "Plomberie + chauffage", "Devis annoncé avant intervention"],
+            image: depannageImg,
+            imageAlt: "Camion de dépannage plomberie d'urgence Artisan Saint Louis dans une rue de Paris la nuit",
+            stat: { value: "< 2h", label: "Intervention" },
           },
           {
             icon: Recycle,
@@ -154,6 +166,9 @@ const Index = () => {
             title: "Entretien & Maintenance",
             description: "Entretien annuel chaudière obligatoire, contrats de maintenance, ramonage, détartrage plomberie.",
             features: ["Attestation officielle", "Contrats sur-mesure", "Toutes marques"],
+            image: entretienImg,
+            imageAlt: "Technicien chauffagiste effectuant l'entretien annuel obligatoire d'une chaudière à Paris",
+            stat: { value: "98 %", label: "Satisfaction" },
           },
         ]}
       />
@@ -161,12 +176,54 @@ const Index = () => {
       <UseCasesSection
         title="Dans quels cas faire appel à nous ?"
         cases={[
-          { title: "Fuite ou dégât des eaux", description: "Une canalisation perce, un joint lâche : intervention prioritaire pour limiter les dégâts dans votre appartement parisien.", urgent: true },
-          { title: "Plus d'eau chaude", description: "Votre chaudière ou cumulus ne produit plus d'eau chaude ? Diagnostic rapide et réparation souvent immédiate.", urgent: true },
-          { title: "Chaudière en panne", description: "Code erreur, mise en sécurité, ne démarre plus : nous intervenons sur toutes marques (Saunier Duval, Viessmann, Bosch, De Dietrich…).", urgent: true },
-          { title: "Installation neuve", description: "Construction, rénovation, remplacement de chaudière : étude personnalisée et devis détaillé." },
-          { title: "Entretien annuel obligatoire", description: "L'entretien de votre chaudière gaz est obligatoire chaque année. Contrat sur-mesure ou intervention ponctuelle." },
-          { title: "Mise aux normes", description: "Mise en conformité gaz, raccordement aux réseaux, certification : nous vous accompagnons." },
+          {
+            title: "Fuite ou dégât des eaux",
+            description: "Une canalisation perce, un joint lâche : intervention prioritaire pour limiter les dégâts dans votre appartement parisien.",
+            urgent: true,
+            image: fuiteImg,
+            imageAlt: "Plombier réparant une fuite d'évier de cuisine dans un appartement à Paris",
+            stat: { value: "30 min", label: "Délai moyen" },
+          },
+          {
+            title: "Plus d'eau chaude",
+            description: "Votre chaudière ou cumulus ne produit plus d'eau chaude ? Diagnostic rapide et réparation souvent immédiate.",
+            urgent: true,
+            image: entretienImg,
+            imageAlt: "Diagnostic d'une chaudière par un chauffagiste à Paris pour panne d'eau chaude",
+            stat: { value: "7j/7", label: "Disponible" },
+          },
+          {
+            title: "Chaudière en panne",
+            description: "Code erreur, mise en sécurité, ne démarre plus : nous intervenons sur toutes marques (Saunier Duval, Viessmann, Bosch, De Dietrich…).",
+            urgent: true,
+            image: depannageImg,
+            imageAlt: "Intervention d'urgence chauffagiste pour chaudière en panne à Paris",
+            badge: "Toutes marques",
+          },
+          {
+            title: "Rénovation salle de bain",
+            description: "Salle de bain vieillissante ou peu pratique : conception sur-mesure, plomberie complète, pose de douche italienne, baignoire ou WC suspendu.",
+            image: bainImg,
+            imageAlt: "Salle de bain parisienne moderne rénovée avec douche italienne en marbre et robinetterie laiton",
+            badge: "Sur-mesure",
+            stat: { value: "Devis gratuit", label: "En 48h" },
+          },
+          {
+            title: "Installation pompe à chaleur",
+            description: "Remplacement chaudière fioul/gaz par une PAC air-eau : étude énergétique, calcul des aides MaPrimeRénov' et CEE inclus.",
+            image: pacImg,
+            imageAlt: "Pompe à chaleur air-eau installée sur la façade en pierre d'un immeuble parisien",
+            badge: "MaPrimeRénov'",
+            stat: { value: "-70 %", label: "Sur facture" },
+          },
+          {
+            title: "Entretien annuel obligatoire",
+            description: "L'entretien de votre chaudière gaz est obligatoire chaque année (décret 2009-649). Contrat sur-mesure ou intervention ponctuelle avec attestation officielle.",
+            image: installationImg,
+            imageAlt: "Entretien annuel obligatoire d'une chaudière gaz à condensation par Artisan Saint Louis",
+            badge: "Obligatoire",
+            stat: { value: "+30 %", label: "Durée de vie" },
+          },
         ]}
       />
 
