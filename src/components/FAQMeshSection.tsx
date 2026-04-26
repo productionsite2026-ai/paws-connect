@@ -69,7 +69,9 @@ const FAQMeshSection = ({ links, embedded = false }: FAQMeshSectionProps) => {
               </Link>
             </motion.div>
           ))}
-        </div>
+            </div>
+          );
+        })()}
       </div>
     );
   }
