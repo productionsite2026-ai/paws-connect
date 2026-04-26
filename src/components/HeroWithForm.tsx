@@ -53,14 +53,14 @@ const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultSe
 
         <div className="container mx-auto px-4">
           {breadcrumb && (
-            <nav aria-label="Fil d'ariane" className="flex items-center gap-1.5 text-sm text-muted-foreground mb-5">
+            <nav aria-label="Fil d'ariane" className="flex items-center gap-1.5 text-sm text-primary-foreground/80 mb-5">
               {breadcrumb.map((b, i) => (
                 <span key={i} className="flex items-center gap-1.5">
                   {i > 0 && <ChevronRight className="h-3.5 w-3.5" />}
                   {b.href ? (
                     <Link to={b.href} className="hover:text-accent transition-smooth">{b.label}</Link>
                   ) : (
-                    <span className="text-foreground font-medium">{b.label}</span>
+                    <span className="text-primary-foreground font-medium">{b.label}</span>
                   )}
                 </span>
               ))}
@@ -70,14 +70,14 @@ const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultSe
           {/* Contenu hero centré */}
           <motion.div {...heroEntry(0)} className="max-w-4xl mx-auto text-center">
             {badge && (
-              <Badge variant="accent" className="px-3 py-1.5 rounded-full text-sm font-semibold mb-5 inline-flex">
+              <Badge variant="accent" className="px-3 py-1.5 rounded-full text-sm font-semibold mb-5 inline-flex shadow-lg">
                 {badge.icon} {badge.label}
               </Badge>
             )}
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] mb-5 text-foreground">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] mb-5 text-primary-foreground drop-shadow-lg">
               {h1}
             </h1>
-            <p className="hero-description text-base md:text-lg text-muted-foreground mb-7 leading-relaxed max-w-2xl mx-auto" data-speakable>
+            <p className="hero-description text-base md:text-lg text-primary-foreground/90 mb-7 leading-relaxed max-w-2xl mx-auto drop-shadow" data-speakable>
               {hook}
             </p>
 
