@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { content, servicesCatalog, type ServiceKey, type DomainKey } from "@/data/content";
 import { toast } from "@/hooks/use-toast";
 
@@ -393,7 +394,7 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                   {errors.domain && <p className="text-xs text-destructive mt-1">{errors.domain}</p>}
                 </div>
 
-                {/* Prestation — cards (au lieu du select) */}
+                {/* Prestation — roulette (Select) qui s'adapte au domaine */}
                 <div>
                   <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
                     2. Prestation {activeDomain && (
@@ -403,43 +404,38 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                     )}
                   </Label>
                   {data.serviceType && data.domain ? (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="grid grid-cols-1 gap-1.5 max-h-[180px] overflow-y-auto pr-1"
+                    <Select
+                      value={data.prestation || ""}
+                      onValueChange={(v) => pickPrestation(v)}
                     >
-                      {prestationList.map((p) => {
-                        const Icon = prestationIcon(p);
-                        const active = data.prestation === p;
-                        const colorCls = activeDomain?.value === "plomberie"
-                          ? "border-service-cyan bg-service-cyan/5"
-                          : "border-service-orange bg-service-orange/5";
-                        const iconCls = activeDomain?.value === "plomberie"
-                          ? "bg-service-cyan/15 text-service-cyan"
-                          : "bg-service-orange/15 text-service-orange";
-                        return (
-                          <button
-                            type="button"
-                            key={p}
-                            onClick={() => pickPrestation(p)}
-                            className={`text-left p-2 rounded-lg border-2 transition-smooth flex items-center gap-2 ${
-                              active ? `${colorCls} shadow-sm` : "border-border bg-card hover:border-accent/40"
-                            }`}
-                          >
-                            <div className={`flex h-6 w-6 items-center justify-center rounded-md flex-shrink-0 ${iconCls}`}>
-                              <Icon className="h-3 w-3" />
-                            </div>
-                            <span className="text-xs font-semibold text-foreground leading-tight flex-1">
-                              {p}
-                            </span>
-                            {active && (
-                              <CheckCircle2 className="h-3.5 w-3.5 text-accent flex-shrink-0" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </motion.div>
+                      <SelectTrigger
+                        className={`h-11 text-sm font-semibold ${
+                          activeDomain?.value === "plomberie"
+                            ? "border-service-cyan/60 focus:ring-service-cyan/30"
+                            : "border-service-orange/60 focus:ring-service-orange/30"
+                        } ${data.prestation ? "border-2" : ""}`}
+                      >
+                        <SelectValue placeholder={`Choisir une prestation ${activeDomain?.label.toLowerCase()}…`} />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[260px]">
+                        {prestationList.map((p) => {
+                          const Icon = prestationIcon(p);
+                          const iconCls = activeDomain?.value === "plomberie"
+                            ? "bg-service-cyan/15 text-service-cyan"
+                            : "bg-service-orange/15 text-service-orange";
+                          return (
+                            <SelectItem key={p} value={p} className="py-2.5">
+                              <span className="flex items-center gap-2">
+                                <span className={`flex h-6 w-6 items-center justify-center rounded-md flex-shrink-0 ${iconCls}`}>
+                                  <Icon className="h-3 w-3" />
+                                </span>
+                                <span className="text-xs font-semibold">{p}</span>
+                              </span>
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
                   ) : (
                     <div className="text-xs text-muted-foreground italic p-3 rounded-lg border-2 border-dashed border-border">
                       Sélectionnez d'abord un domaine
