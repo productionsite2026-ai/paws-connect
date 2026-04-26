@@ -16,6 +16,9 @@ interface HeroProps {
   breadcrumb?: { label: string; href?: string }[];
   defaultService?: ServiceKey;
   defaultDomain?: DomainKey;
+  /** Image de fond panoramique placée derrière le titre (SEO + contexte visuel) */
+  backgroundImage?: string;
+  backgroundImageAlt?: string;
 }
 
 /**
