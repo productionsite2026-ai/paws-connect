@@ -11,7 +11,6 @@ import HeroWithForm from "@/components/HeroWithForm";
 import QuickAnswer from "@/components/QuickAnswer";
 import ServicesGrid from "@/components/ServicesGrid";
 import UseCasesSection from "@/components/UseCasesSection";
-import InterventionsSection from "@/components/InterventionsSection";
 import FAQSection from "@/components/FAQSection";
 import FAQMeshSection from "@/components/FAQMeshSection";
 import FinalCTA from "@/components/FinalCTA";
@@ -227,7 +226,6 @@ const Index = () => {
         ]}
       />
 
-      <InterventionsSection />
 
       <FAQSection
         title="Vos questions sur la plomberie & le chauffage à Paris"

@@ -4,7 +4,6 @@ import HeroWithForm from "@/components/HeroWithForm";
 import QuickAnswer from "@/components/QuickAnswer";
 import ServicesGrid from "@/components/ServicesGrid";
 import UseCasesSection from "@/components/UseCasesSection";
-import InterventionsSection from "@/components/InterventionsSection";
 import FAQSection from "@/components/FAQSection";
 import FAQMeshSection from "@/components/FAQMeshSection";
 import FinalCTA from "@/components/FinalCTA";
@@ -156,7 +155,6 @@ const InstallationRenovation = () => {
         ]}
       />
 
-      <InterventionsSection />
 
       <FAQSection
         title="FAQ — Installation & Rénovation"
