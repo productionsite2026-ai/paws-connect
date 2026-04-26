@@ -205,10 +205,7 @@ const InstallationRenovation = () => {
           { q: "Travaillez-vous avec quelles marques ?", a: "Nous travaillons avec les marques reconnues du marché : Grohe, Hansgrohe, Geberit (sanitaires), Saunier Duval, Viessmann, Bosch, Daikin, Atlantic (chauffage). Nous adaptons les équipements à votre projet et budget." },
           { q: "Intervenez-vous en copropriété ?", a: "Oui, nous gérons les démarches techniques en copropriété (conformité, ventilation, évacuations) et fournissons les documents nécessaires au syndic. Nous travaillons aussi bien dans l'ancien que dans le neuf." },
         ]}
-      />
-
-      <FAQMeshSection
-        links={[
+        meshLinks={[
           { question: "Que faire en cas de fuite urgente après une installation ?", href: content.routes.depannage, pageLabel: "Dépannage urgent" },
           { question: "L'entretien annuel chaudière est-il vraiment obligatoire ?", href: content.routes.entretien, pageLabel: "Entretien" },
           { question: "Voir tous les services Artisan Saint Louis", href: "/", pageLabel: "Accueil" },
