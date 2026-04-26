@@ -1,4 +1,12 @@
-import { Hammer, Droplets, Flame, Wind, Leaf, Bath, Award, Shield, Clock, Settings, Thermometer, Zap } from "lucide-react";
+import { Hammer, Droplets, Flame, Wind, Leaf, Bath, Award, Shield, Clock, Thermometer } from "lucide-react";
+import heroInstall from "@/assets/hero-installation-renovation.jpg";
+import imgChaudiere from "@/assets/card-chaudiere-condensation.jpg";
+import imgPAC from "@/assets/card-pompe-chaleur-facade.jpg";
+import imgWC from "@/assets/card-wc-suspendu.jpg";
+import imgRobinet from "@/assets/card-pose-robinetterie.jpg";
+import imgGranules from "@/assets/card-chaudiere-granules.jpg";
+import imgPlancher from "@/assets/card-plancher-chauffant.jpg";
+import imgRadiateur from "@/assets/card-radiateur-thermostat.jpg";
 import PageLayout from "@/components/PageLayout";
 import HeroWithForm from "@/components/HeroWithForm";
 import QuickAnswer from "@/components/QuickAnswer";
@@ -10,9 +18,6 @@ import FinalCTA from "@/components/FinalCTA";
 import { useSEO, useJsonLd } from "@/hooks/useSEO";
 import { content } from "@/data/content";
 import { breadcrumbSchema, serviceSchema, speakableSchema, ORIGIN } from "@/lib/schemas";
-import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { fadeUp } from "@/lib/animations";
 
 const InstallationRenovation = () => {
   const url = `${ORIGIN}${content.routes.installation}`;
@@ -43,6 +48,8 @@ const InstallationRenovation = () => {
     <PageLayout>
       <HeroWithForm
         defaultService="installation"
+        backgroundImage={heroInstall}
+        backgroundImageAlt="Salle de bain rénovée par Artisan Saint Louis dans un appartement parisien avec marbre, vasque sur plan en bois et robinetterie laiton"
         breadcrumb={[{ label: "Accueil", href: "/" }, { label: "Installation & Rénovation" }]}
         badge={{ label: "Installation & Rénovation", icon: <Hammer className="h-3.5 w-3.5" /> }}
         h1={
@@ -50,12 +57,12 @@ const InstallationRenovation = () => {
             Installation & Rénovation à <span className="text-gradient-brand">Paris</span> — plomberie & chauffage
           </>
         }
-        hook="Pose neuve, remplacement ou rénovation complète : votre artisan plombier-chauffagiste à Paris vous accompagne du plan au démarrage. Devis détaillé, aides MaPrimeRénov' calculées, garantie décennale."
+        hook="Pose neuve, remplacement ou rénovation complète : votre artisan plombier-chauffagiste à Paris vous accompagne du plan au démarrage. Devis détaillé, accompagnement aides MaPrimeRénov', garantie décennale."
         trustBadges={[
           { label: "Devis gratuit", variant: "serviceBlue", icon: <Shield className="h-3.5 w-3.5" /> },
           { label: "Garantie décennale", variant: "serviceEmerald", icon: <Award className="h-3.5 w-3.5" /> },
           { label: "Aides MaPrimeRénov'", variant: "serviceOrange", icon: <Leaf className="h-3.5 w-3.5" /> },
-          { label: "Intervention sous 48h", variant: "serviceCyan", icon: <Clock className="h-3.5 w-3.5" /> },
+          { label: "Intervention rapide", variant: "serviceCyan", icon: <Clock className="h-3.5 w-3.5" /> },
         ]}
       />
 
@@ -63,29 +70,6 @@ const InstallationRenovation = () => {
         question="Que comprend une installation plomberie ou chauffage à Paris ?"
         answer="Une installation à Paris (et en Île-de-France) couvre la pose neuve ou le remplacement complet de vos équipements : en plomberie — sanitaires (WC, douche, baignoire), robinetterie, réseau cuivre/multicouche, salle de bain ; en chauffage — chaudière gaz à condensation, pompe à chaleur, chaudière à granulés, radiateurs, plancher chauffant. Artisan Saint Louis étudie votre logement (appartement haussmannien, immeuble récent, maison de banlieue), dimensionne, pose, met en service et garantit l'installation 10 ans."
       />
-
-      {/* Présentation détaillée */}
-      <section className="py-16 bg-section-gradient">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <motion.div {...fadeUp}>
-            <Badge variant="accentSoft" className="mb-3">Notre expertise</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-5">
-              Une seule équipe pour vos installations plomberie et chauffage
-            </h2>
-            <div className="prose prose-lg max-w-none text-muted-foreground space-y-4">
-              <p>
-                À Paris et en banlieue, chaque installation est unique : un appartement haussmannien du 4ᵉ ne se traite pas comme un pavillon de Bagneux ou un studio neuf à Saint-Denis. Notre équipe de <strong className="text-foreground">plombiers-chauffagistes certifiés à Paris</strong> applique les normes DTU 60.1 / 60.11 (plomberie) et RGE QualiPAC / Qualigaz (chauffage), travaille avec du matériel de marques reconnues (Grohe, Hansgrohe, Geberit, Saunier Duval, Viessmann, Daikin) et garantit ses travaux 10 ans.
-              </p>
-              <p>
-                Nous prenons en charge la <strong className="text-foreground">conception complète</strong> : étude technique, dimensionnement, choix matériel, devis détaillé, planification, pose, mise en service et finitions. Pour le chauffage, nous calculons gratuitement vos aides MaPrimeRénov', CEE Coup de pouce, TVA réduite à 5,5 % et éco-PTZ — sur une pompe à chaleur, les aides peuvent couvrir <strong className="text-foreground">jusqu'à 50 % du coût total</strong>.
-              </p>
-              <p>
-                Nous intervenons aussi bien chez les particuliers (appartements parisiens, copropriétés, maisons individuelles en banlieue) que dans le tertiaire (bureaux, commerces, restaurants). Notre engagement : <strong className="text-foreground">prix annoncé respecté</strong>, planning tenu, finitions soignées, aucune mauvaise surprise sur la facture.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       <ServicesGrid
         eyebrow="Nos prestations"
@@ -99,6 +83,9 @@ const InstallationRenovation = () => {
             title: "Rénovation salle de bain complète",
             description: "Conception, plomberie, sanitaires, carrelage : rénovation clé en main, du plan 3D à la pose.",
             features: ["Étude & plan personnalisé", "Coordination corps de métier", "Garantie décennale globale"],
+            image: imgWC,
+            imageAlt: "Salle de bain moderne avec WC suspendu et vasque sur plan en bois rénovée par Artisan Saint Louis à Paris",
+            stat: { value: "Clé en main", label: "Du plan à la pose" },
           },
           {
             icon: Droplets,
@@ -107,22 +94,31 @@ const InstallationRenovation = () => {
             title: "Pose sanitaires & robinetterie",
             description: "WC suspendus, douches, baignoires, vasques, mitigeurs thermostatiques toutes marques.",
             features: ["WC suspendus & au sol", "Cabines & receveurs", "Robinetterie thermostatique"],
+            image: imgRobinet,
+            imageAlt: "Pose d'un mitigeur chromé sur une vasque par un plombier d'Artisan Saint Louis dans une salle de bain à Paris",
+            stat: { value: "Toutes marques", label: "Grohe, Hansgrohe…" },
           },
           {
             icon: Flame,
             badge: "Chauffage",
             badgeVariant: "serviceOrange",
             title: "Chaudière gaz à condensation",
-            description: "La référence en rénovation : compacte, performante, éligible aux aides CEE et TVA 5,5 %.",
-            features: ["Rendement +15 %", "Compacte murale", "Aides CEE incluses"],
+            description: "La référence en rénovation : compacte, performante, éligible aux aides CEE et TVA réduite.",
+            features: ["Haut rendement", "Compacte murale", "Aides CEE incluses"],
+            image: imgChaudiere,
+            imageAlt: "Chaudière gaz à condensation murale blanche installée à Paris par Artisan Saint Louis avec raccordement cuivre",
+            stat: { value: "TVA 5,5 %", label: "Travaux d'amélioration" },
           },
           {
             icon: Wind,
             badge: "Chauffage",
             badgeVariant: "serviceEmerald",
             title: "Pompe à chaleur air/eau",
-            description: "Énergie renouvelable, MaPrimeRénov' jusqu'à 5 000 €. Idéal en maison ou immeuble bien isolé.",
-            features: ["COP 3,5 à 4,5", "MaPrimeRénov' jusqu'à 5 000 €", "Chauffage + ECS"],
+            description: "Énergie renouvelable, éligible MaPrimeRénov'. Idéal en maison ou immeuble bien isolé.",
+            features: ["Énergie renouvelable", "MaPrimeRénov' éligible", "Chauffage + ECS"],
+            image: imgPAC,
+            imageAlt: "Pompe à chaleur air-eau installée sur la façade d'un immeuble parisien par Artisan Saint Louis",
+            stat: { value: "MaPrimeRénov'", label: "Aides cumulables" },
           },
           {
             icon: Leaf,
@@ -130,7 +126,10 @@ const InstallationRenovation = () => {
             badgeVariant: "serviceViolet",
             title: "Chaudière à granulés (pellets)",
             description: "Énergie biomasse renouvelable, autonomie élevée, parfait pour maisons avec espace de stockage.",
-            features: ["Combustible local", "Autonomie 1 à 2 semaines", "Aides MaPrimeRénov'"],
+            features: ["Combustible local", "Autonomie élevée", "Aides MaPrimeRénov'"],
+            image: imgGranules,
+            imageAlt: "Chaudière à granulés de bois (pellets) installée par Artisan Saint Louis dans une maison de banlieue parisienne",
+            stat: { value: "Biomasse", label: "Énergie verte" },
           },
           {
             icon: Thermometer,
@@ -139,6 +138,9 @@ const InstallationRenovation = () => {
             title: "Radiateurs & plancher chauffant",
             description: "Pose et remplacement de radiateurs eau chaude et plancher chauffant hydraulique basse température.",
             features: ["Radiateurs alu / fonte", "Plancher chauffant", "Régulation pièce par pièce"],
+            image: imgPlancher,
+            imageAlt: "Plancher chauffant hydraulique en cours d'installation par Artisan Saint Louis avec tubes PER rouges",
+            stat: { value: "Basse temp.", label: "Confort homogène" },
           },
         ]}
       />
@@ -146,25 +148,60 @@ const InstallationRenovation = () => {
       <UseCasesSection
         title="Dans quels cas faire appel à nous pour une installation ?"
         cases={[
-          { title: "Vous rénovez votre salle de bain", description: "Refaire à neuf une salle de bain demande coordination, savoir-faire et respect des normes d'étanchéité." },
-          { title: "Votre chaudière a plus de 15 ans", description: "Au-delà, le rendement chute et les pannes se multiplient : le remplacement devient économiquement justifié." },
-          { title: "Vous construisez ou rénovez en profondeur", description: "Étude thermique, dimensionnement, pose et mise en service d'un système plomberie + chauffage complet." },
-          { title: "Vous changez vos sanitaires", description: "Remplacement WC, douche, baignoire, robinetterie : intervention propre et rapide en appartement parisien." },
-          { title: "Vous voulez réduire vos factures", description: "Passage à la pompe à chaleur, chaudière condensation ou granulés : aides MaPrimeRénov' calculées." },
-          { title: "Vous achetez un bien ancien", description: "Diagnostic complet et mise aux normes plomberie + chauffage avant d'emménager." },
+          {
+            title: "Vous rénovez votre salle de bain",
+            description: "Refaire à neuf une salle de bain demande coordination, savoir-faire et respect des normes d'étanchéité.",
+            image: imgWC,
+            imageAlt: "Salle de bain rénovée à Paris avec WC suspendu et carrelage gris large format",
+            badge: "Sur-mesure",
+          },
+          {
+            title: "Votre chaudière a plus de 15 ans",
+            description: "Au-delà, le rendement chute et les pannes se multiplient : le remplacement devient économiquement justifié.",
+            image: imgChaudiere,
+            imageAlt: "Remplacement de chaudière ancienne par un modèle gaz à condensation à Paris",
+            badge: "Remplacement",
+          },
+          {
+            title: "Vous construisez ou rénovez en profondeur",
+            description: "Étude thermique, dimensionnement, pose et mise en service d'un système plomberie + chauffage complet.",
+            image: imgPlancher,
+            imageAlt: "Chantier de rénovation lourde avec plancher chauffant hydraulique en pose",
+            badge: "Clé en main",
+          },
+          {
+            title: "Vous changez vos sanitaires",
+            description: "Remplacement WC, douche, baignoire, robinetterie : intervention propre et rapide en appartement parisien.",
+            image: imgRobinet,
+            imageAlt: "Remplacement de robinetterie sur une vasque par Artisan Saint Louis à Paris",
+            badge: "Propre & rapide",
+          },
+          {
+            title: "Vous voulez réduire vos consommations",
+            description: "Passage à la pompe à chaleur, chaudière condensation ou granulés : accompagnement aides MaPrimeRénov'.",
+            image: imgPAC,
+            imageAlt: "Pompe à chaleur installée pour réduire la consommation énergétique d'un logement parisien",
+            badge: "MaPrimeRénov'",
+          },
+          {
+            title: "Vous achetez un bien ancien",
+            description: "Diagnostic complet et mise aux normes plomberie + chauffage avant d'emménager.",
+            image: imgRadiateur,
+            imageAlt: "Diagnostic de l'installation de chauffage d'un bien ancien par Artisan Saint Louis à Paris",
+            badge: "Mise aux normes",
+          },
         ]}
       />
-
 
       <FAQSection
         title="FAQ — Installation & Rénovation"
         faqs={[
-          { q: "Combien coûte une rénovation de salle de bain à Paris ?", a: "Une rénovation complète de salle de bain à Paris se situe en moyenne entre 6 000 € et 15 000 € selon la surface, le niveau de gamme et les contraintes d'évacuation (immeuble haussmannien, copropriété). Notre devis détaillé inclut la dépose, la plomberie, l'électricité, le carrelage et la pose des sanitaires." },
-          { q: "Combien coûte l'installation d'une chaudière gaz à condensation ?", a: "Comptez entre 4 000 et 7 500 € TTC pose comprise pour une chaudière gaz à condensation murale 25 kW. Avec les aides CEE et la TVA à 5,5 %, le reste à charge moyen tombe entre 3 000 et 5 500 €." },
-          { q: "Une pompe à chaleur est-elle rentable à Paris et en Île-de-France ?", a: "Oui, à condition que le logement soit correctement isolé. Avec un COP saisonnier de 3,5 à 4,5 et MaPrimeRénov' jusqu'à 5 000 €, le retour sur investissement se fait en 7 à 10 ans en maison individuelle de banlieue. En appartement parisien, la PAC air/air est souvent plus adaptée." },
-          { q: "Quelles aides financières puis-je obtenir ?", a: "Trois dispositifs cumulables : MaPrimeRénov' (jusqu'à 11 000 € pour PAC selon revenus), CEE Coup de pouce chauffage (jusqu'à 5 000 €), TVA réduite à 5,5 % et éco-PTZ jusqu'à 50 000 €. Nous montons gratuitement votre dossier d'aides." },
-          { q: "Combien de temps prend une installation ?", a: "Un remplacement de chaudière à l'identique : 1 jour. Une PAC complète avec ballon ECS : 2 à 4 jours. Une rénovation de salle de bain complète : 5 à 12 jours selon l'ampleur." },
+          { q: "Quelles aides financières puis-je obtenir ?", a: "Plusieurs dispositifs cumulables existent : MaPrimeRénov' (selon revenus et équipement), CEE Coup de pouce chauffage, TVA réduite à 5,5 % et éco-PTZ. Nous montons gratuitement votre dossier d'aides en fonction de votre situation." },
+          { q: "Une pompe à chaleur est-elle adaptée à un appartement parisien ?", a: "En appartement parisien, la PAC air/air est souvent plus pertinente que la PAC air/eau, qui exige davantage de contraintes techniques (unité extérieure, réseau hydraulique). Nous étudions votre logement avant toute préconisation." },
+          { q: "Combien de temps prend une installation ?", a: "Un remplacement de chaudière à l'identique : environ 1 jour. Une PAC complète avec ballon ECS : 2 à 4 jours. Une rénovation de salle de bain complète : 5 à 12 jours selon l'ampleur des travaux et la coordination des corps de métier." },
           { q: "Garantissez-vous vos installations ?", a: "Oui, tous nos travaux bénéficient de la garantie décennale (10 ans pour les éléments structurels et l'étanchéité), de la garantie biennale (2 ans pour les équipements) et de la garantie de parfait achèvement (1 an)." },
+          { q: "Travaillez-vous avec quelles marques ?", a: "Nous travaillons avec les marques reconnues du marché : Grohe, Hansgrohe, Geberit (sanitaires), Saunier Duval, Viessmann, Bosch, Daikin, Atlantic (chauffage). Nous adaptons les équipements à votre projet et budget." },
+          { q: "Intervenez-vous en copropriété ?", a: "Oui, nous gérons les démarches techniques en copropriété (conformité, ventilation, évacuations) et fournissons les documents nécessaires au syndic. Nous travaillons aussi bien dans l'ancien que dans le neuf." },
         ]}
       />
 
@@ -178,7 +215,7 @@ const InstallationRenovation = () => {
 
       <FinalCTA
         title="Un projet d'installation à Paris ou en banlieue ?"
-        subtitle="Devis gratuit, calcul des aides, conseil honnête : appelez votre artisan plombier-chauffagiste."
+        subtitle="Devis gratuit, accompagnement aides, conseil honnête : appelez votre artisan plombier-chauffagiste."
       />
     </PageLayout>
   );
