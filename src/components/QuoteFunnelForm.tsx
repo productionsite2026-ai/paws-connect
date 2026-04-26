@@ -6,7 +6,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Loader2,
-  Wrench,
   Flame,
   Droplets,
   AlertTriangle,
@@ -14,12 +13,16 @@ import {
   Mail,
   User,
   MessageSquare,
-  Calendar,
   Home,
   Building2,
   Send,
   Hammer,
   Recycle,
+  Wrench,
+  Bath,
+  Thermometer,
+  ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +33,7 @@ import { content, servicesCatalog, type ServiceKey, type DomainKey } from "@/dat
 import { toast } from "@/hooks/use-toast";
 
 // ============================================
-// Schéma Zod
+// Schéma Zod (sans urgency)
 // ============================================
 const formSchema = z.object({
   serviceType: z.enum(["installation", "depannage", "entretien"], {
@@ -40,7 +43,6 @@ const formSchema = z.object({
     errorMap: () => ({ message: "Choisissez un domaine" }),
   }),
   prestation: z.string().trim().min(2, "Sélectionnez une prestation"),
-  urgency: z.enum(["urgent", "semaine", "flexible"]),
   propertyType: z.enum(["maison", "appartement", "local_pro"]),
   name: z.string().trim().min(2, "Nom trop court").max(80, "Nom trop long"),
   phone: z
@@ -64,22 +66,79 @@ type FormData = z.infer<typeof formSchema>;
 // ============================================
 // Options
 // ============================================
-const serviceOptions: { value: ServiceKey; label: string; desc: string; icon: typeof Hammer }[] = [
-  { value: "installation", label: "Installation & Rénovation", desc: "Pose neuve, remplacement, rénovation complète", icon: Hammer },
-  { value: "depannage", label: "Dépannage", desc: "Fuite, panne, urgence 7j/7 24h/24", icon: AlertTriangle },
-  { value: "entretien", label: "Entretien", desc: "Maintenance, contrat annuel, mise aux normes", icon: Recycle },
+const serviceOptions: {
+  value: ServiceKey;
+  label: string;
+  desc: string;
+  icon: typeof Hammer;
+  color: string;
+  ring: string;
+}[] = [
+  {
+    value: "installation",
+    label: "Installation & Rénovation",
+    desc: "Pose neuve, remplacement, rénovation complète",
+    icon: Hammer,
+    color: "bg-service-blue/15 text-service-blue",
+    ring: "border-service-blue bg-service-blue/5",
+  },
+  {
+    value: "depannage",
+    label: "Dépannage urgent",
+    desc: "Fuite, panne, urgence 7j/7 24h/24",
+    icon: AlertTriangle,
+    color: "bg-service-rose/15 text-service-rose",
+    ring: "border-service-rose bg-service-rose/5",
+  },
+  {
+    value: "entretien",
+    label: "Entretien",
+    desc: "Maintenance, contrat annuel, mise aux normes",
+    icon: Recycle,
+    color: "bg-service-emerald/15 text-service-emerald",
+    ring: "border-service-emerald bg-service-emerald/5",
+  },
 ];
 
-const domainOptions: { value: DomainKey; label: string; icon: typeof Droplets }[] = [
-  { value: "plomberie", label: "Plomberie", icon: Droplets },
-  { value: "chauffage", label: "Chauffage", icon: Flame },
+const domainOptions: {
+  value: DomainKey;
+  label: string;
+  icon: typeof Droplets;
+  color: string;
+  ring: string;
+}[] = [
+  {
+    value: "plomberie",
+    label: "Plomberie",
+    icon: Droplets,
+    color: "bg-service-cyan/15 text-service-cyan",
+    ring: "border-service-cyan bg-service-cyan/5",
+  },
+  {
+    value: "chauffage",
+    label: "Chauffage",
+    icon: Flame,
+    color: "bg-service-orange/15 text-service-orange",
+    ring: "border-service-orange bg-service-orange/5",
+  },
 ];
 
-const urgencyOptions = [
-  { value: "urgent" as const, label: "Urgent (< 24h)", icon: AlertTriangle },
-  { value: "semaine" as const, label: "Cette semaine", icon: Calendar },
-  { value: "flexible" as const, label: "Flexible", icon: CheckCircle2 },
-];
+// Icône par mot-clé pour les prestations
+const prestationIcon = (label: string) => {
+  const l = label.toLowerCase();
+  if (l.includes("fuite") || l.includes("dégât")) return AlertTriangle;
+  if (l.includes("salle de bain") || l.includes("douche") || l.includes("baignoire")) return Bath;
+  if (l.includes("wc") || l.includes("bouché") || l.includes("débouchage")) return Wrench;
+  if (l.includes("robinet") || l.includes("mitigeur") || l.includes("eau")) return Droplets;
+  if (l.includes("chaudière") || l.includes("granulés") || l.includes("gaz")) return Flame;
+  if (l.includes("pompe à chaleur") || l.includes("pac")) return Thermometer;
+  if (l.includes("radiateur") || l.includes("plancher")) return Thermometer;
+  if (l.includes("chauffe-eau") || l.includes("ballon") || l.includes("ecs")) return Droplets;
+  if (l.includes("entretien") || l.includes("annuel") || l.includes("ramonage")) return Recycle;
+  if (l.includes("norme") || l.includes("sécurité") || l.includes("diagnostic")) return ShieldCheck;
+  if (l.includes("détartrage") || l.includes("optimisation") || l.includes("réglage")) return Sparkles;
+  return CheckCircle2;
+};
 
 const propertyOptions = [
   { value: "maison" as const, label: "Maison", icon: Home },
@@ -111,35 +170,36 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
     setErrors((e) => ({ ...e, [field]: undefined }));
   };
 
-  const next = () => {
-    if (step === 1) {
-      if (!data.serviceType) {
-        setErrors({ serviceType: "Choisissez un type d'intervention" });
-        return;
-      }
-      if (!data.urgency) {
-        setErrors({ urgency: "Indiquez le délai souhaité" });
-        return;
-      }
-    }
-    if (step === 2) {
-      if (!data.domain) {
-        setErrors({ domain: "Choisissez plomberie ou chauffage" });
-        return;
-      }
-      if (!data.prestation) {
-        setErrors({ prestation: "Précisez la prestation" });
-        return;
-      }
-      if (!data.propertyType) {
-        setErrors({ propertyType: "Précisez le type de logement" });
-        return;
-      }
-    }
-    setStep((s) => Math.min(s + 1, totalSteps));
+  const goTo = (s: number) => setStep(Math.max(1, Math.min(s, totalSteps)));
+  const prev = () => goTo(step - 1);
+
+  // Auto-advance helpers
+  const pickService = (value: ServiceKey) => {
+    update("serviceType", value);
+    update("prestation", "" as FormData["prestation"]);
+    // Auto-advance to step 2
+    setTimeout(() => goTo(2), 180);
   };
 
-  const prev = () => setStep((s) => Math.max(s - 1, 1));
+  const pickDomain = (value: DomainKey) => {
+    update("domain", value);
+    update("prestation", "" as FormData["prestation"]);
+  };
+
+  const pickPrestation = (value: string) => {
+    update("prestation", value);
+  };
+
+  const pickProperty = (value: FormData["propertyType"]) => {
+    update("propertyType", value);
+    // Si tout est rempli en étape 2, on avance auto
+    setTimeout(() => {
+      if (data.domain && (data.prestation || value)) {
+        // On checke avec la dernière valeur
+      }
+      goTo(3);
+    }, 200);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -182,6 +242,12 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
   // Liste des prestations dynamique selon service + domaine
   const prestationList =
     data.serviceType && data.domain ? servicesCatalog[data.serviceType].domains[data.domain].items : [];
+
+  const activeService = serviceOptions.find((s) => s.value === data.serviceType);
+  const activeDomain = domainOptions.find((d) => d.value === data.domain);
+
+  // Step 2 complete?
+  const step2Complete = !!data.domain && !!data.prestation && !!data.propertyType;
 
   // ============================================
   // CONFIRMATION
@@ -233,7 +299,7 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
 
       <form onSubmit={handleSubmit} className="p-5 sm:p-6">
         <AnimatePresence mode="wait">
-          {/* ============ ÉTAPE 1 : Type d'intervention + délai ============ */}
+          {/* ============ ÉTAPE 1 : Type d'intervention (auto-advance) ============ */}
           {step === 1 && (
             <motion.div
               key="step-1"
@@ -245,7 +311,7 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
             >
               <div>
                 <h3 className="font-display text-lg font-bold text-foreground mb-1">Que souhaitez-vous ?</h3>
-                <p className="text-sm text-muted-foreground">Choisissez votre type d'intervention.</p>
+                <p className="text-sm text-muted-foreground">Cliquez pour passer à l'étape suivante.</p>
               </div>
               <div className="space-y-2.5">
                 {serviceOptions.map((opt) => {
@@ -255,60 +321,34 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                     <button
                       type="button"
                       key={opt.value}
-                      onClick={() => {
-                        update("serviceType", opt.value);
-                        // reset prestation si on change de service
-                        update("prestation", "" as FormData["prestation"]);
-                      }}
+                      onClick={() => pickService(opt.value)}
                       className={`w-full text-left p-3.5 rounded-xl border-2 transition-smooth ${
-                        active
-                          ? "border-accent bg-accent/5 shadow-sm"
-                          : "border-border bg-card hover:border-accent/40"
+                        active ? `${opt.ring} shadow-sm` : "border-border bg-card hover:border-accent/40"
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent flex-shrink-0">
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0 ${opt.color}`}>
                           <Icon className="h-5 w-5" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="font-semibold text-sm text-foreground">{opt.label}</div>
                           <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
                         </div>
-                        {active && <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" />}
+                        {active ? (
+                          <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" />
+                        ) : (
+                          <ArrowRight className="h-5 w-5 text-muted-foreground/50 flex-shrink-0" />
+                        )}
                       </div>
                     </button>
                   );
                 })}
               </div>
               {errors.serviceType && <p className="text-xs text-destructive">{errors.serviceType}</p>}
-
-              <div className="pt-2">
-                <Label className="text-sm font-semibold text-foreground mb-2 block">Délai souhaité</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {urgencyOptions.map((opt) => {
-                    const Icon = opt.icon;
-                    const active = data.urgency === opt.value;
-                    return (
-                      <button
-                        type="button"
-                        key={opt.value}
-                        onClick={() => update("urgency", opt.value)}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-smooth ${
-                          active ? "border-accent bg-accent/5" : "border-border bg-card hover:border-accent/40"
-                        }`}
-                      >
-                        <Icon className={`h-4 w-4 ${active ? "text-accent" : "text-muted-foreground"}`} />
-                        <span className="text-xs font-semibold text-foreground text-center leading-tight">{opt.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                {errors.urgency && <p className="text-xs text-destructive mt-1">{errors.urgency}</p>}
-              </div>
             </motion.div>
           )}
 
-          {/* ============ ÉTAPE 2 : Domaine + prestation + logement ============ */}
+          {/* ============ ÉTAPE 2 : Domaine + prestation (cards) + logement ============ */}
           {step === 2 && (
             <motion.div
               key="step-2"
@@ -316,16 +356,21 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.25 }}
-              className="space-y-5"
+              className="space-y-6"
             >
               <div>
-                <h3 className="font-display text-lg font-bold text-foreground mb-1">Plomberie ou chauffage ?</h3>
-                <p className="text-sm text-muted-foreground">Précisez votre besoin.</p>
+                <h3 className="font-display text-lg font-bold text-foreground mb-1">
+                  {activeService ? `${activeService.label} —` : ""} précisez votre besoin
+                </h3>
+                <p className="text-sm text-muted-foreground">Choisissez le domaine puis la prestation.</p>
               </div>
 
+              {/* Domaine — cards colorées */}
               <div>
-                <Label className="text-sm font-semibold text-foreground mb-2 block">Domaine</Label>
-                <div className="grid grid-cols-2 gap-2">
+                <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
+                  1. Domaine
+                </Label>
+                <div className="grid grid-cols-2 gap-3">
                   {domainOptions.map((opt) => {
                     const Icon = opt.icon;
                     const active = data.domain === opt.value;
@@ -333,16 +378,18 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                       <button
                         type="button"
                         key={opt.value}
-                        onClick={() => {
-                          update("domain", opt.value);
-                          update("prestation", "" as FormData["prestation"]);
-                        }}
-                        className={`flex items-center gap-2.5 p-3.5 rounded-lg border-2 transition-smooth ${
-                          active ? "border-accent bg-accent/5" : "border-border bg-card hover:border-accent/40"
+                        onClick={() => pickDomain(opt.value)}
+                        className={`relative overflow-hidden flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-smooth ${
+                          active ? `${opt.ring} shadow-sm` : "border-border bg-card hover:border-accent/40"
                         }`}
                       >
-                        <Icon className={`h-5 w-5 ${active ? "text-accent" : "text-muted-foreground"}`} />
-                        <span className="text-sm font-semibold text-foreground">{opt.label}</span>
+                        <div className={`flex h-11 w-11 items-center justify-center rounded-full ${opt.color}`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <span className="text-sm font-bold text-foreground">{opt.label}</span>
+                        {active && (
+                          <CheckCircle2 className="h-4 w-4 text-accent absolute top-2 right-2" />
+                        )}
                       </button>
                     );
                   })}
@@ -350,30 +397,61 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                 {errors.domain && <p className="text-xs text-destructive mt-1">{errors.domain}</p>}
               </div>
 
+              {/* Prestation — cards (au lieu du select) */}
               {data.serviceType && data.domain && (
-                <div>
-                  <Label htmlFor="prestation" className="text-sm font-semibold text-foreground mb-2 block">
-                    Prestation
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
+                    2. Prestation {activeDomain && (
+                      <Badge variant={activeDomain.value === "plomberie" ? "serviceCyan" : "serviceOrange"} className="ml-1 text-[10px] py-0">
+                        {activeDomain.label}
+                      </Badge>
+                    )}
                   </Label>
-                  <select
-                    id="prestation"
-                    value={data.prestation || ""}
-                    onChange={(e) => update("prestation", e.target.value)}
-                    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  >
-                    <option value="">— Sélectionner —</option>
-                    {prestationList.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="grid grid-cols-2 gap-2">
+                    {prestationList.map((p) => {
+                      const Icon = prestationIcon(p);
+                      const active = data.prestation === p;
+                      const colorCls = activeDomain?.value === "plomberie"
+                        ? "border-service-cyan bg-service-cyan/5"
+                        : "border-service-orange bg-service-orange/5";
+                      const iconCls = activeDomain?.value === "plomberie"
+                        ? "bg-service-cyan/15 text-service-cyan"
+                        : "bg-service-orange/15 text-service-orange";
+                      return (
+                        <button
+                          type="button"
+                          key={p}
+                          onClick={() => pickPrestation(p)}
+                          className={`text-left p-2.5 rounded-lg border-2 transition-smooth flex items-start gap-2 ${
+                            active ? `${colorCls} shadow-sm` : "border-border bg-card hover:border-accent/40"
+                          }`}
+                        >
+                          <div className={`flex h-7 w-7 items-center justify-center rounded-md flex-shrink-0 ${iconCls}`}>
+                            <Icon className="h-3.5 w-3.5" />
+                          </div>
+                          <span className="text-xs font-semibold text-foreground leading-tight pt-0.5">
+                            {p}
+                          </span>
+                          {active && (
+                            <CheckCircle2 className="h-3.5 w-3.5 text-accent flex-shrink-0 ml-auto mt-0.5" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                   {errors.prestation && <p className="text-xs text-destructive mt-1">{errors.prestation}</p>}
-                </div>
+                </motion.div>
               )}
 
+              {/* Type de logement */}
               <div>
-                <Label className="text-sm font-semibold text-foreground mb-2 block">Type de logement</Label>
+                <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
+                  3. Type de logement
+                </Label>
                 <div className="grid grid-cols-3 gap-2">
                   {propertyOptions.map((opt) => {
                     const Icon = opt.icon;
@@ -382,9 +460,9 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
                       <button
                         type="button"
                         key={opt.value}
-                        onClick={() => update("propertyType", opt.value)}
+                        onClick={() => pickProperty(opt.value)}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-smooth ${
-                          active ? "border-accent bg-accent/5" : "border-border bg-card hover:border-accent/40"
+                          active ? "border-accent bg-accent/5 shadow-sm" : "border-border bg-card hover:border-accent/40"
                         }`}
                       >
                         <Icon className={`h-4 w-4 ${active ? "text-accent" : "text-muted-foreground"}`} />
@@ -397,7 +475,7 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
               </div>
 
               <div>
-                <Label htmlFor="message" className="text-sm font-semibold text-foreground mb-2 block">
+                <Label htmlFor="message" className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">
                   Précisez votre besoin (optionnel)
                 </Label>
                 <Textarea
@@ -502,8 +580,14 @@ const QuoteFunnelForm = ({ defaultService, defaultDomain, variant = "section" }:
               <ArrowLeft className="h-4 w-4" /> Retour
             </Button>
           )}
-          {step < totalSteps && (
-            <Button type="button" variant="accent" onClick={next} className="flex-1 gap-2">
+          {step === 2 && (
+            <Button
+              type="button"
+              variant="accent"
+              onClick={() => goTo(3)}
+              disabled={!step2Complete}
+              className="flex-1 gap-2"
+            >
               Continuer <ArrowRight className="h-4 w-4" />
             </Button>
           )}
