@@ -110,7 +110,68 @@ const Index = () => {
         ]}
       />
 
-      {/* Présentation — UNIQUEMENT sur l'accueil — placée juste après ServicesGrid */}
+      <UseCasesSection
+        title="Dans quels cas faire appel à nous ?"
+        cases={[
+          {
+            title: "Fuite ou dégât des eaux",
+            description: "Une canalisation perce, un joint lâche : intervention prioritaire pour limiter les dégâts dans votre appartement parisien.",
+            urgent: true,
+            image: fuiteImg,
+            imageAlt: "Fuite d'eau sous un évier de cuisine dans un appartement à Paris nécessitant une intervention plombier urgente",
+            stat: { value: "Urgence", label: "Prioritaire" },
+          },
+          {
+            title: "Plus d'eau chaude",
+            description: "Votre chaudière ou cumulus ne produit plus d'eau chaude ? Diagnostic rapide et réparation souvent immédiate.",
+            urgent: true,
+            image: entretienTech,
+            imageAlt: "Diagnostic d'une chaudière par un chauffagiste à Paris pour panne d'eau chaude sanitaire",
+            stat: { value: "7j/7", label: "Disponible" },
+          },
+          {
+            title: "Chaudière en panne",
+            description: "Code erreur, mise en sécurité, ne démarre plus : nous intervenons sur toutes marques (Saunier Duval, Viessmann, Bosch, De Dietrich…).",
+            urgent: true,
+            image: depannageVan,
+            imageAlt: "Intervention d'urgence chauffagiste Artisan Saint Louis pour chaudière en panne à Paris",
+            badge: "Toutes marques",
+          },
+          {
+            title: "Rénovation salle de bain",
+            description: "Salle de bain vieillissante ou peu pratique : conception sur-mesure, plomberie complète, pose de douche italienne, baignoire ou WC suspendu.",
+            image: bainImg,
+            imageAlt: "Rénovation complète d'une salle de bain parisienne avec douche italienne et vasque sur plan en bois",
+            badge: "Sur-mesure",
+            stat: { value: "Devis", label: "Gratuit" },
+          },
+          {
+            title: "Installation pompe à chaleur",
+            description: "Remplacement chaudière par une pompe à chaleur air-eau : étude énergétique et accompagnement aux aides MaPrimeRénov' inclus.",
+            image: pacImg,
+            imageAlt: "Pompe à chaleur air-eau installée sur la façade en pierre d'un immeuble parisien par Artisan Saint Louis",
+            badge: "MaPrimeRénov'",
+            stat: { value: "Énergie", label: "Renouvelable" },
+          },
+          {
+            title: "Entretien annuel obligatoire",
+            description: "L'entretien de votre chaudière gaz est obligatoire chaque année (décret 2009-649). Contrat sur-mesure ou intervention ponctuelle avec attestation officielle.",
+            image: attestationImg,
+            imageAlt: "Attestation d'entretien chaudière conforme au décret 2009-649 remise par Artisan Saint Louis à Paris",
+            badge: "Obligatoire",
+            stat: { value: "Légal", label: "Décret 2009-649" },
+          },
+          {
+            title: "Pose ou remplacement de radiateurs",
+            description: "Radiateurs aluminium, fonte ou plancher chauffant : équilibrage, robinet thermostatique et confort thermique homogène.",
+            image: radiateurImg,
+            imageAlt: "Radiateur vertical en fonte avec thermostat connecté installé dans un appartement haussmannien à Paris",
+            badge: "Confort",
+          },
+        ]}
+      />
+
+      {/* Présentation — UNIQUEMENT sur l'accueil — placée juste avant la suite */}
       <section className="py-16 md:py-20 bg-section-gradient">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
@@ -174,67 +235,6 @@ const Index = () => {
       <QuickAnswer
         question="Qui appeler pour une fuite, une panne de chaudière ou une installation à Paris ?"
         answer="Pour toute intervention plomberie ou chauffage à Paris et en Île-de-France — fuite d'eau, panne de chaudière, installation neuve, rénovation de salle de bain, entretien annuel obligatoire — contactez Artisan Saint Louis au 06 12 34 56 78. Plombier-chauffagiste local certifié basé à Paris centre, nous couvrons tous les arrondissements parisiens et toute la banlieue (92, 93, 94, 78, 91, 95, 77). Diagnostic gratuit, devis transparent avant toute intervention, urgences 7j/7 24h/24."
-      />
-
-      <UseCasesSection
-        title="Dans quels cas faire appel à nous ?"
-        cases={[
-          {
-            title: "Fuite ou dégât des eaux",
-            description: "Une canalisation perce, un joint lâche : intervention prioritaire pour limiter les dégâts dans votre appartement parisien.",
-            urgent: true,
-            image: fuiteImg,
-            imageAlt: "Fuite d'eau sous un évier de cuisine dans un appartement à Paris nécessitant une intervention plombier urgente",
-            stat: { value: "Urgence", label: "Prioritaire" },
-          },
-          {
-            title: "Plus d'eau chaude",
-            description: "Votre chaudière ou cumulus ne produit plus d'eau chaude ? Diagnostic rapide et réparation souvent immédiate.",
-            urgent: true,
-            image: entretienTech,
-            imageAlt: "Diagnostic d'une chaudière par un chauffagiste à Paris pour panne d'eau chaude sanitaire",
-            stat: { value: "7j/7", label: "Disponible" },
-          },
-          {
-            title: "Chaudière en panne",
-            description: "Code erreur, mise en sécurité, ne démarre plus : nous intervenons sur toutes marques (Saunier Duval, Viessmann, Bosch, De Dietrich…).",
-            urgent: true,
-            image: depannageVan,
-            imageAlt: "Intervention d'urgence chauffagiste Artisan Saint Louis pour chaudière en panne à Paris",
-            badge: "Toutes marques",
-          },
-          {
-            title: "Rénovation salle de bain",
-            description: "Salle de bain vieillissante ou peu pratique : conception sur-mesure, plomberie complète, pose de douche italienne, baignoire ou WC suspendu.",
-            image: bainImg,
-            imageAlt: "Rénovation complète d'une salle de bain parisienne avec douche italienne et vasque sur plan en bois",
-            badge: "Sur-mesure",
-            stat: { value: "Devis", label: "Gratuit" },
-          },
-          {
-            title: "Installation pompe à chaleur",
-            description: "Remplacement chaudière par une pompe à chaleur air-eau : étude énergétique et accompagnement aux aides MaPrimeRénov' inclus.",
-            image: pacImg,
-            imageAlt: "Pompe à chaleur air-eau installée sur la façade en pierre d'un immeuble parisien par Artisan Saint Louis",
-            badge: "MaPrimeRénov'",
-            stat: { value: "Énergie", label: "Renouvelable" },
-          },
-          {
-            title: "Entretien annuel obligatoire",
-            description: "L'entretien de votre chaudière gaz est obligatoire chaque année (décret 2009-649). Contrat sur-mesure ou intervention ponctuelle avec attestation officielle.",
-            image: attestationImg,
-            imageAlt: "Attestation d'entretien chaudière conforme au décret 2009-649 remise par Artisan Saint Louis à Paris",
-            badge: "Obligatoire",
-            stat: { value: "Légal", label: "Décret 2009-649" },
-          },
-          {
-            title: "Pose ou remplacement de radiateurs",
-            description: "Radiateurs aluminium, fonte ou plancher chauffant : équilibrage, robinet thermostatique et confort thermique homogène.",
-            image: radiateurImg,
-            imageAlt: "Radiateur vertical en fonte avec thermostat connecté installé dans un appartement haussmannien à Paris",
-            badge: "Confort",
-          },
-        ]}
       />
 
       <FAQSection
