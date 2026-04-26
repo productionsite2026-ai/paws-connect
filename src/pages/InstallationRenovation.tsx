@@ -66,10 +66,7 @@ const InstallationRenovation = () => {
         ]}
       />
 
-      <QuickAnswer
-        question="Que comprend une installation plomberie ou chauffage à Paris ?"
-        answer="Une installation à Paris (et en Île-de-France) couvre la pose neuve ou le remplacement complet de vos équipements : en plomberie — sanitaires (WC, douche, baignoire), robinetterie, réseau cuivre/multicouche, salle de bain ; en chauffage — chaudière gaz à condensation, pompe à chaleur, chaudière à granulés, radiateurs, plancher chauffant. Artisan Saint Louis étudie votre logement (appartement haussmannien, immeuble récent, maison de banlieue), dimensionne, pose, met en service et garantit l'installation 10 ans."
-      />
+      {/* QuickAnswer déplacé après ServicesGrid */}
 
       <ServicesGrid
         eyebrow="Nos prestations"
