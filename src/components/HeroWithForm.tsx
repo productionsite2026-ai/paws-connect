@@ -25,9 +25,23 @@ interface HeroProps {
  * Hero standardisé avec formulaire chevauchant la 1ère section.
  * Le formulaire est en colonne droite sur desktop, et chevauche le hero sur mobile.
  */
-const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultService, defaultDomain }: HeroProps) => {
+const HeroWithForm = ({ badge, h1, hook, trustBadges = [], breadcrumb, defaultService, defaultDomain, backgroundImage, backgroundImageAlt }: HeroProps) => {
   return (
     <section className="relative pt-24 pb-12 md:pb-32 bg-water-pattern overflow-hidden">
+      {/* Background image SEO + contexte visuel */}
+      {backgroundImage && (
+        <>
+          <img
+            src={backgroundImage}
+            alt={backgroundImageAlt || ""}
+            width={1920}
+            height={1080}
+            className="absolute inset-0 w-full h-full object-cover -z-20 opacity-[0.18]"
+            fetchPriority="high"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/40 -z-10" />
+        </>
+      )}
       {/* Background decorative */}
       <div className="absolute inset-0 bg-water-gradient -z-10" />
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl -z-10 -translate-y-1/2 translate-x-1/3" />
