@@ -110,12 +110,7 @@ const Index = () => {
         ]}
       />
 
-      <QuickAnswer
-        question="Qui appeler pour une fuite, une panne de chaudière ou une installation à Paris ?"
-        answer="Pour toute intervention plomberie ou chauffage à Paris et en Île-de-France — fuite d'eau, panne de chaudière, installation neuve, rénovation de salle de bain, entretien annuel obligatoire — contactez Artisan Saint Louis au 06 12 34 56 78. Plombier-chauffagiste local certifié basé à Paris centre, nous couvrons tous les arrondissements parisiens et toute la banlieue (92, 93, 94, 78, 91, 95, 77). Diagnostic gratuit, devis transparent avant toute intervention, urgences 7j/7 24h/24."
-      />
-
-      {/* Présentation — UNIQUEMENT sur l'accueil */}
+      {/* Présentation — UNIQUEMENT sur l'accueil — placée juste après ServicesGrid */}
       <section className="py-16 md:py-20 bg-section-gradient">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
@@ -175,6 +170,11 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <QuickAnswer
+        question="Qui appeler pour une fuite, une panne de chaudière ou une installation à Paris ?"
+        answer="Pour toute intervention plomberie ou chauffage à Paris et en Île-de-France — fuite d'eau, panne de chaudière, installation neuve, rénovation de salle de bain, entretien annuel obligatoire — contactez Artisan Saint Louis au 06 12 34 56 78. Plombier-chauffagiste local certifié basé à Paris centre, nous couvrons tous les arrondissements parisiens et toute la banlieue (92, 93, 94, 78, 91, 95, 77). Diagnostic gratuit, devis transparent avant toute intervention, urgences 7j/7 24h/24."
+      />
 
       <UseCasesSection
         title="Dans quels cas faire appel à nous ?"
