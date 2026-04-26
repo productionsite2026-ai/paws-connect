@@ -12,7 +12,7 @@ import QuickAnswer from "@/components/QuickAnswer";
 import ServicesGrid from "@/components/ServicesGrid";
 import UseCasesSection from "@/components/UseCasesSection";
 import FAQSection from "@/components/FAQSection";
-import FAQMeshSection from "@/components/FAQMeshSection";
+
 import FinalCTA from "@/components/FinalCTA";
 import { useSEO, useJsonLd } from "@/hooks/useSEO";
 import { content } from "@/data/content";
