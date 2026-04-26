@@ -168,10 +168,7 @@ const EntretienMaintenance = () => {
           { q: "Combien de temps prend une visite d'entretien ?", a: "Une visite d'entretien complète prend en moyenne 45 minutes à 1 heure pour une chaudière gaz, et 1h à 1h30 pour une chaudière fioul ou granulés. L'attestation officielle est remise sur place ou envoyée sous 15 jours." },
           { q: "Que comprend une visite d'entretien complète ?", a: "Nettoyage du corps de chauffe et du brûleur, vérification des organes de sécurité, contrôle des pressions, mesure des fumées et du monoxyde de carbone (CO), réglage de la combustion, vérification du conduit et des raccordements, nettoyage du condenseur (chaudières condensation)." },
         ]}
-      />
-
-      <FAQMeshSection
-        links={[
+        meshLinks={[
           { question: "Quelle nouvelle chaudière installer en remplacement ?", href: content.routes.installation, pageLabel: "Installation & Rénovation" },
           { question: "Que faire en cas de fuite ou panne urgente ?", href: content.routes.depannage, pageLabel: "Dépannage urgent" },
           { question: "Découvrir tous nos services", href: "/", pageLabel: "Accueil" },
