@@ -69,6 +69,47 @@ const Index = () => {
         ]}
       />
 
+      <ServicesGrid
+        eyebrow="Nos 3 services principaux"
+        title="Installation, dépannage, entretien : un seul artisan"
+        subtitle="Plomberie & chauffage couverts par 3 expertises complémentaires."
+        services={[
+          {
+            icon: Hammer,
+            badge: "Installation & Rénovation",
+            badgeVariant: "serviceBlue",
+            title: "Installation & Rénovation",
+            description: "Pose neuve, remplacement et rénovation complète : salle de bain, sanitaires, chaudière, pompe à chaleur, radiateurs.",
+            features: ["Plomberie sanitaire complète", "Chaudière, PAC, granulés", "Conseil aides MaPrimeRénov'"],
+            image: bainImg,
+            imageAlt: "Salle de bain moderne rénovée par Artisan Saint Louis dans un appartement parisien avec marbre et robinetterie laiton",
+            stat: { value: "+1 200", label: "Installations" },
+          },
+          {
+            icon: Wrench,
+            badge: "Dépannage",
+            badgeVariant: "serviceRose",
+            title: "Dépannage 7j/7 24h/24",
+            description: "Intervention rapide pour fuites, dégâts des eaux, pannes chaudière, débouchage, plus d'eau chaude.",
+            features: ["Urgence rapide", "Plomberie + chauffage", "Devis annoncé avant intervention"],
+            image: depannageVan,
+            imageAlt: "Camion de dépannage plomberie d'urgence Artisan Saint Louis garé devant un immeuble parisien la nuit",
+            stat: { value: "7j/7", label: "Disponible" },
+          },
+          {
+            icon: Recycle,
+            badge: "Entretien",
+            badgeVariant: "serviceEmerald",
+            title: "Entretien & Maintenance",
+            description: "Entretien annuel chaudière obligatoire, contrats de maintenance, ramonage, détartrage plomberie.",
+            features: ["Attestation officielle", "Contrats sur-mesure", "Toutes marques"],
+            image: entretienTech,
+            imageAlt: "Technicien chauffagiste Artisan Saint Louis effectuant l'entretien annuel obligatoire d'une chaudière à Paris",
+            stat: { value: "98 %", label: "Satisfaction" },
+          },
+        ]}
+      />
+
       <QuickAnswer
         question="Qui appeler pour une fuite, une panne de chaudière ou une installation à Paris ?"
         answer="Pour toute intervention plomberie ou chauffage à Paris et en Île-de-France — fuite d'eau, panne de chaudière, installation neuve, rénovation de salle de bain, entretien annuel obligatoire — contactez Artisan Saint Louis au 06 12 34 56 78. Plombier-chauffagiste local certifié basé à Paris centre, nous couvrons tous les arrondissements parisiens et toute la banlieue (92, 93, 94, 78, 91, 95, 77). Diagnostic gratuit, devis transparent avant toute intervention, urgences 7j/7 24h/24."
@@ -134,47 +175,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      <ServicesGrid
-        eyebrow="Nos 3 services principaux"
-        title="Installation, dépannage, entretien : un seul artisan"
-        subtitle="Plomberie & chauffage couverts par 3 expertises complémentaires."
-        services={[
-          {
-            icon: Hammer,
-            badge: "Installation & Rénovation",
-            badgeVariant: "serviceBlue",
-            title: "Installation & Rénovation",
-            description: "Pose neuve, remplacement et rénovation complète : salle de bain, sanitaires, chaudière, pompe à chaleur, radiateurs.",
-            features: ["Plomberie sanitaire complète", "Chaudière, PAC, granulés", "Conseil aides MaPrimeRénov'"],
-            image: bainImg,
-            imageAlt: "Salle de bain moderne rénovée par Artisan Saint Louis dans un appartement parisien avec marbre et robinetterie laiton",
-            stat: { value: "+1 200", label: "Installations" },
-          },
-          {
-            icon: Wrench,
-            badge: "Dépannage",
-            badgeVariant: "serviceRose",
-            title: "Dépannage 7j/7 24h/24",
-            description: "Intervention rapide pour fuites, dégâts des eaux, pannes chaudière, débouchage, plus d'eau chaude.",
-            features: ["Urgence rapide", "Plomberie + chauffage", "Devis annoncé avant intervention"],
-            image: depannageVan,
-            imageAlt: "Camion de dépannage plomberie d'urgence Artisan Saint Louis garé devant un immeuble parisien la nuit",
-            stat: { value: "7j/7", label: "Disponible" },
-          },
-          {
-            icon: Recycle,
-            badge: "Entretien",
-            badgeVariant: "serviceEmerald",
-            title: "Entretien & Maintenance",
-            description: "Entretien annuel chaudière obligatoire, contrats de maintenance, ramonage, détartrage plomberie.",
-            features: ["Attestation officielle", "Contrats sur-mesure", "Toutes marques"],
-            image: entretienTech,
-            imageAlt: "Technicien chauffagiste Artisan Saint Louis effectuant l'entretien annuel obligatoire d'une chaudière à Paris",
-            stat: { value: "98 %", label: "Satisfaction" },
-          },
-        ]}
-      />
 
       <UseCasesSection
         title="Dans quels cas faire appel à nous ?"
